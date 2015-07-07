@@ -2,14 +2,110 @@
 	backgroundColor:"white"
 }
 
-"Label": {
-	width: Ti.UI.SIZE,
-	height: Ti.UI.SIZE,
-	color: "#000"
+"#parentScrollableView":{
+	top  :0,
+	left : 0,
+	right :0,
+	bottom : 50,
+	scrollingEnabled : false,
+	currentPageIndex : 0
 }
 
-"#label": {
-	font: {
-		fontSize: 12
-	}
+".bottomButton":{
+	bottom : 0,
+	height : 50,
+	width : "50%",
+	font : {
+		fontSize : 14
+	},
+	color : 'black',
+	borderColor : "red",
+	borderRadius : 5,
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
 }
+
+"#previousButton":{
+	left : "0%",
+}
+
+"#nextButton":{
+	right : "0%",
+}
+
+"#bottomOverlay":{
+	top  :"100%",
+	left : 0,
+	right :0,
+	height : "100%",
+	backgroundColor : 'white'
+}
+
+"#hideLabel":{
+	top : 10,
+	right : "10%",
+	width : "30%",
+	height : 50,
+	font : {
+		fontSize : 14
+	},
+	color : 'black',
+	borderColor : "red",
+	borderRadius : 5,
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#bottomScrollableView":{
+	top : 70,
+	left : 0,
+	right : 0,
+	bottom : 0,
+	showPagingControl : true
+}
+
+".containerView":{
+	left : 0,
+	right : 0,
+	top : 0,
+	bottom : 0
+}
+
+".detailImages":{
+	top : "5%",
+	width : 300,
+	height : 300,
+}
+
+"#imageView1":{
+	width : 300,
+	height : 300,
+	baseHeight : 300,
+	baseHeight : 300,
+	image : "/images/dummy/placeholder.png",
+}
+
+"#imageView2":{
+	width : 300,
+	height : 300,
+	baseHeight : 300,
+	baseHeight : 300,
+	image : "/images/dummy/placeholder.png",
+
+}
+
+"#imageView3":{
+	width : 300,
+	height : 300,
+	baseHeight : 300,
+	baseHeight : 300,
+	image : "/images/dummy/placeholder.png",
+}
+
+"#imageView4":{
+	width : 300,
+	height : 300,
+	baseHeight : 300,
+	baseHeight : 300,
+	image : "/images/dummy/placeholder.png",
+}
+
+
