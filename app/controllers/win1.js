@@ -1,3 +1,5 @@
+Alloy.Globals.currentWindow = "Win1";
+
 Ti.Geolocation.purpose = 'Location based services for the app';
 Ti.Geolocation.accuracy = Ti.Geolocation.ACCURACY_NEAREST_TEN_METERS;
 Ti.Geolocation.preferredProvider = Ti.Geolocation.PROVIDER_GPS;

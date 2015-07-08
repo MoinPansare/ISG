@@ -1,0 +1,45 @@
+".container": {
+	backgroundColor: "white"
+}
+
+"#callWindow":{
+	fullscreen: true,
+	statusBarStyle: Ti.UI.iPhone.StatusBar.TRANSLUCENT_BLACK,
+	backgroundColor: '#E0E0E0'
+}
+
+"#logo":{
+	top: 0,
+	left: 0,
+	width: "100%",
+	height: 75,
+	image: "/images/logo/HeaderLogo.jpg"
+}
+"#index":{
+	fullscreen: true,
+	statusBarStyle: Ti.UI.iPhone.StatusBar.TRANSLUCENT_BLACK
+}
+
+
+"#headingLabel":{
+	top: "25%",
+	height: 'auto',
+	backgroundColor: 'transparent',
+	left: "5%",
+	right: "5%",
+	font: {
+		fontSize: 18,
+		fontWeight : 'bold'
+	},
+	textAlign: Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	text : 'If you need immediate help with your incident, please press the call button below and you will be put through a representative'
+}
+
+"#callButton":{
+	top : "60%",
+	left : "35%",
+	right : "35%",
+	height : "20%",
+	image : "/images/logo/callButton.png"
+}
+

@@ -1,0 +1,19 @@
+<Alloy>
+	<View id="menu" backgroundColor="black">
+		<View class="tab" id="tab1" onClick="openWin1">
+			
+		</View>
+		<View class="tab" id="tab2" onClick="openWin2">
+			
+		</View>
+		<View class="tab" id="tab3" onClick="openWin3">
+			
+		</View>
+		<View class="tab" id="tab4" onClick="openWin4">
+			
+		</View>
+		<View class="tab" id="tab5" onClick="openWin5">
+			
+		</View>
+	</View>
+</Alloy>

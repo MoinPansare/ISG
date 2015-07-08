@@ -1,10 +1,8 @@
 <Alloy>
-	<Window class="container" id="index">
+	<Window class="container" id="callWindow">
 		<ImageView id="logo"></ImageView>
 		<Label id="headingLabel"></Label>
-		<ScrollView id="labelScroller">
-			<Label id="bodyLabel"></Label>
-		</ScrollView>
+		<ImageView id="callButton" onClick="initiateCall"></ImageView>
 		<Require type="view" src="menu" id="menu"></Require>
 	</Window>
 </Alloy>

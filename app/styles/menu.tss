@@ -1,0 +1,46 @@
+
+".container" : {
+  
+}
+
+"#menu":{
+	bottom : 0,
+	left : 0,
+	right : 0,
+	height : 60
+}
+
+".tab":{
+	width : "20%",
+	height : 60
+}
+
+"#tab1":{
+	left : 0,
+	backgroundColor : 'red',
+	identifier : 'Home'
+}
+
+"#tab2":{
+	left : "20%",
+	backgroundColor : 'green',
+	identifier : 'CallWin'
+}
+
+"#tab3":{
+	left : "40%",
+	backgroundColor : 'blue',
+	identifier : ''
+}
+
+"#tab4":{
+	left : "60%",
+	backgroundColor : 'yellow',
+	identifier : ''
+}
+
+"#tab5":{
+	right : 0,
+	backgroundColor : 'red',
+	identifier : ''
+}
