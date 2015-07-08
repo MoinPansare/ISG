@@ -1,0 +1,24 @@
+<Alloy>
+	<Window class="container" id="win1">
+		<ScrollableView id="parentScrollableView"></ScrollableView>
+		<ImageView id="temp" left="5" width="70" height="40"></ImageView>
+		<Label class="bottomButton" id="nextButton" onClick="goNext">Next</Label>
+		<View id="bottomOverlay">
+			<Label id="hideLabel" onClick="hideTheBottomOverlay">Hide</Label>
+			<ScrollableView id="bottomScrollableView">
+				<View >
+					<ImageView class="detailImages" id="imageView1" ></ImageView>
+				</View>
+				<View >
+					<ImageView class="detailImages" id="imageView2" ></ImageView>
+				</View>
+				<View >
+					<ImageView class="detailImages" id="imageView3" ></ImageView>
+				</View>
+				<View >
+					<ImageView class="detailImages" id="imageView4" ></ImageView>
+				</View>
+			</ScrollableView>
+		</View>
+	</Window>
+</Alloy>

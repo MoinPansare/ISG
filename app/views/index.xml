@@ -1,24 +1,10 @@
 <Alloy>
-	<Window class="container" id="rootWin">
-		<ScrollableView id="parentScrollableView"></ScrollableView>
-		<Label class="bottomButton" id="previousButton" onClick="goPrevious">Previous</Label>
-		<Label class="bottomButton" id="nextButton" onClick="goNext">Next</Label>
-		<View id="bottomOverlay">
-			<Label id="hideLabel" onClick="hideTheBottomOverlay">Hide</Label>
-			<ScrollableView id="bottomScrollableView">
-				<View >
-					<ImageView class="detailImages" id="imageView1" ></ImageView>
-				</View>
-				<View >
-					<ImageView class="detailImages" id="imageView2" ></ImageView>
-				</View>
-				<View >
-					<ImageView class="detailImages" id="imageView3" ></ImageView>
-				</View>
-				<View >
-					<ImageView class="detailImages" id="imageView4" ></ImageView>
-				</View>
-			</ScrollableView>
-		</View>
+	<NavigationWindow id="navwindow" platform="ios" >
+		<Window class="container" id="rootWin">
+			<Label onClick="navigate">Navigate To Next Page</Label>
+		</Window>
+	</NavigationWindow>
+	<Window class="container" id="rootWin" platform="android">
+		<Label onClick="navigate">Navigate To Next Page</Label>
 	</Window>
 </Alloy>
