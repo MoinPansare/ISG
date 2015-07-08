@@ -1,12 +1,3 @@
-/*var win2 = Alloy.createController('win2').getView();
-    // For Alloy projects, you can pass context
-    // to the controller in the Alloy.createController method.
-    // var win2 = Alloy.createController('win2', {foobar: 42}).getView();
-    win2.open();
-    
-*/
-
-
 function openWin1() {
 	openWinFun($.tab1.identifier);
 }
@@ -27,28 +18,62 @@ function openWin5() {
 	openWinFun($.tab5.identifier);
 }
 
-
-
 function openWinFun(id) {
-	var win;
-	switch(id) 
-	{
-		case 'Home' :
-			if (Alloy.Globals.currentWindow != 'Home') {
-				win = Alloy.createController('index').getView();
-			}
+	var foundAtIndex = -1;
+	for ( i = 0,
+	j = Alloy.Globals.winStack.length - 1; i < j; i++) {
+		if (Alloy.Globals.winStack[i].name == id) {
+			foundAtIndex = i;
 			break;
-		case 'CallWin' :
-			if (Alloy.Globals.currentWindow != 'CallWin') {
-				win = Alloy.createController('callWindow').getView();
-			}
-			break;
-		default : win = null;break;
+		}
 	}
-	if(win != null)
-	{
+	if (foundAtIndex != -1) {
+		for ( i = Alloy.Globals.winStack.length - 1; i > foundAtIndex; i--) {
+			Alloy.Globals.winStack[i].ref.close();
+		}
+		var temp = [];
+		for(i=0;i<foundAtIndex;i++)
+		{
+			temp.push(Alloy.Globals.winStack[i]);
+		}
+		Alloy.Globals.winStack = [];
+		Alloy.Globals.winStack = temp;
+	}
+
+	var win;
+	switch(id) {
+	case 'Home' :
+		if (Alloy.Globals.currentWindow != 'Home') {
+			win = Alloy.createController('index').getView();
+		}
+		break;
+	case 'CallWin' :
+		if (Alloy.Globals.currentWindow != 'CallWin') {
+			win = Alloy.createController('callWindow').getView();
+		}
+		break;
+	default :
+		win = null;
+		break;
+	}
+	if (win != null) {
 		win.open();
 	}
-
 }
+
+Ti.App.addEventListener('markSelected', function(data) {
+	$.tab1.backgroundColor = 'red';
+	$.tab2.backgroundColor = 'green';
+	$.tab3.backgroundColor = 'blue';
+	$.tab4.backgroundColor = 'yellow';
+	$.tab5.backgroundColor = 'red';
+	switch(data.id) {
+	case 'Home' :
+		$.tab1.backgroundColor = 'black';
+		break;
+	case 'CallWin' :
+		$.tab2.backgroundColor = 'black';
+		break;
+	}
+});
 

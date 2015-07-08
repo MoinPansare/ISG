@@ -1,5 +1,13 @@
 Alloy.Globals.currentWindow = "CallWin";
-
+var obj = {
+	name : "CallWin",
+	ref : $.callWindow,
+};
+Alloy.Globals.winStack.push(obj);
+var objOfColorChange = {
+	id : 'CallWin'
+};
+Ti.App.fireEvent('markSelected',objOfColorChange);
 
 function initiateCall() {
 	// var dialog = Ti.UI.createAlertDialog({

@@ -11,3 +11,4 @@
 // Alloy.Globals.someGlobalFunction = function(){};
 
 Alloy.Globals.currentWindow = "";
+Alloy.Globals.winStack = [];

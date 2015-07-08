@@ -44,7 +44,7 @@
 
 "#bodyLabel":{
 	top: 5,
-	bottom: 'auto',
+	height: 'auto',
 	backgroundColor: 'transparent',
 	left: "7%",
 	right: "7%",
