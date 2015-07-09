@@ -1,0 +1,49 @@
+<Alloy>
+	<Window class="container" id="incidentWin">
+		<View id="toolBar">
+			<ImageView id="backImage" onClick="goPrevious"></ImageView>
+			<Label id="restartButton"></Label>
+			<Label id="editORdone"></Label>
+			<Label id="nextButton" onClick="goNext"></Label>
+			<Label id="SendEmail"></Label>
+		</View>
+		<View id="statusPointer"></View>
+		<ScrollableView id="parentScrollableView">
+			<View class="scrollableSubChilds" id="infoView">
+				<ScrollView id="infoScrollView">
+					<Label id="headignLabel"></Label>
+					<Label id="bodyLabel"></Label>
+				</ScrollView>
+			</View>
+			<View class="scrollableSubChilds" id="dateSelection">
+				<Label id="dateheaderlabel"></Label>
+				<Label id="dateSelectionLabel"></Label>
+			</View>
+			<View class="scrollableSubChilds" id="mapViewParent">
+				<View id="mapBackground"></View>
+				<Label id="addPin"></Label>
+			</View>
+			<View class="scrollableSubChilds" id="imageSelection">
+				<View id="imagesBackground">
+					<ImageView id="img1" onClick="getPicFromGallery"></ImageView>
+					<ImageView id="img2" onClick="getPicFromGallery"></ImageView>
+					<ImageView id="img3" onClick="getPicFromGallery"></ImageView>
+					<ImageView id="img4" onClick="getPicFromGallery"></ImageView>
+				</View>
+				<Label id="addImage" onClick="captureImageFromCamera"></Label>
+				<View id="overlayBackground"></View>
+				<View id="overlayView">
+					<View id="horizontalView">
+						<Label id="showScreenLabel">Show Screen Again</Label>
+						<Switch id="switchToggle" onChange="changeToggle"></Switch>
+						<Label id="closeLabel" onClick="closeOverlay"></Label>
+					</View>
+					<ScrollView id="overlayScroll">
+						<Label id="contentLabel"></Label>
+					</ScrollView>
+				</View>
+			</View>
+		</ScrollableView>
+		<Require type="view" src="menu" id="menu"></Require>
+	</Window>
+</Alloy>

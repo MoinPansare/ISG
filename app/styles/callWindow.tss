@@ -4,7 +4,6 @@
 
 "#callWindow":{
 	fullscreen: true,
-	statusBarStyle: Ti.UI.iPhone.StatusBar.TRANSLUCENT_BLACK,
 	backgroundColor: '#E0E0E0'
 }
 

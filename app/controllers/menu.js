@@ -52,6 +52,11 @@ function openWinFun(id) {
 			win = Alloy.createController('callWindow').getView();
 		}
 		break;
+	case 'IncidentWin' :
+		if (Alloy.Globals.currentWindow != 'IncidentWin') {
+			win = Alloy.createController('incidentWin').getView();
+		}
+		break;
 	default :
 		win = null;
 		break;
@@ -61,19 +66,22 @@ function openWinFun(id) {
 	}
 }
 
-Ti.App.addEventListener('markSelected', function(data) {
-	$.tab1.backgroundColor = 'red';
+exports.changeBackgroundColor = function(id) {
+    $.tab1.backgroundColor = 'red';
 	$.tab2.backgroundColor = 'green';
 	$.tab3.backgroundColor = 'blue';
 	$.tab4.backgroundColor = 'yellow';
 	$.tab5.backgroundColor = 'red';
-	switch(data.id) {
+	switch(id) {
 	case 'Home' :
 		$.tab1.backgroundColor = 'black';
 		break;
 	case 'CallWin' :
 		$.tab2.backgroundColor = 'black';
 		break;
+	case 'IncidentWin' :
+		$.tab3.backgroundColor = 'black';
+		break;
 	}
-});
+};
 

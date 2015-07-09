@@ -1,0 +1,346 @@
+
+".container" : {
+  
+}
+"#incidentWin":{
+	fullscreen: true,
+	backgroundColor: '#E0E0E0'
+}
+
+"#toolBar":{
+	top: 0,
+	left: 0,
+	width: "100%",
+	height: 60,
+	backgroundColor : '#6E85A7'
+}
+
+"#backImage":{
+	left : "5%",
+	width : "10%",
+	height : 35,
+	backgroundColor : 'red'
+}
+
+"#restartButton":{
+	left : "40%",
+	width : "15%",
+	height : 35,
+	font : {
+		fontSize : 13
+	},
+	text : 'Restart',
+	backgroundColor : 'red',
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#editORdone":{
+	left : "60%",
+	width : "15%",
+	height : 35,
+	font : {
+		fontSize : 13
+	},
+	text : 'Done',
+	backgroundColor : 'red',
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#nextButton":{
+	left : "80%",
+	width : "15%",
+	height : 35,
+	font : {
+		fontSize : 13
+	},
+	text : 'Next',
+	backgroundColor : 'red',
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#SendEmail":{
+	left : "100%",
+	width : "15%",
+	height : 35,
+	font : {
+		fontSize : 13
+	},
+	text : 'Done',
+	backgroundColor : 'Send Email',
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#statusPointer":{
+	top: 60,
+	left: 0,
+	width: "100%",
+	height: 60,
+	backgroundColor : '#E72117'
+}
+
+"#parentScrollableView":{
+	top : 120,
+	left : 0,
+	right : 0,
+	bottom : 60,
+	currentPageIndex : 0,
+	scrollingEnabled : false
+}
+
+".scrollableSubChilds":{
+	left : "0%",
+	top : "0%",
+	width : "100%",
+	height : "100%",
+}
+
+"#infoView":{
+	
+}
+
+"#infoScrollView":{
+	left : "0%",
+	top : "0%",
+	width : "100%",
+	height : "100%",
+	contentWidth: 'auto',
+	contentHeight: 'auto',
+	scrollType: 'vertical',
+	showVerticalScrollIndicator: true,
+	backgroundColor: '#E0E0E0'
+}
+
+"#headignLabel":{
+	top : "10%",
+	left : "5%",
+	right : "5%",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	font: {
+		fontSize: 17,
+		fontWeight : 'bold'
+	},
+	height : 'auto',
+	text : "This section will help you record and send incident report to ISG"
+}
+
+"#bodyLabel":{
+	top : "25%",
+	left : "5%",
+	right : "5%",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	font: {
+		fontSize: 15,
+	},
+	height : 'auto',
+	text : "Press 'Next' on top right-hand column to procede onto various senctions \n\n Press 'Next' on top right-hand column to procede onto various senctions \n\n Press 'Next' on top right-hand column to procede onto various senctions \n\n Press 'Next' on top right-hand column to procede onto various senctions" 
+}
+
+"#dateSelection":{
+	backgroundColor : 'transparent'
+}
+
+"#dateheaderlabel":{
+	color:'black',
+	font:{fontSize:22},
+	text:'Incident Date',
+	left:'10%',
+	top : 30,
+	height : 40
+}
+
+"#dateSelectionLabel":{
+	top : 90,
+	height : 40,
+	left : "10%",
+	right : "10%",
+	backgroundColor : 'white',
+	borderRadius : 5,
+	font : {
+		fontSize : 15
+	},
+	prefilled : 0,
+	text : "Select a date",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#mapBackground":{
+	left : 0,
+	right : 0,
+	width : "100%",
+	height : "100%",
+	mapLoaded : 0,
+}
+
+"#addPin":{
+	top : "5%",
+	left : "15%",
+	height : 45,
+	right : "15%",
+	backgroundColor : 'white',
+	borderRadius : 5,
+	borderColor : "#B2B2B2",
+	color : '#1A3D7B',
+	font : {
+		fontSize : 15
+	},
+	text : "Add Location Pin",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#imageSelection":{
+	selcectorTag : 0,
+}
+
+"#addImage":{
+	top : 10,
+	left : "15%",
+	height : 45,
+	right : "15%",
+	backgroundColor : 'white',
+	borderRadius : 5,
+	borderColor : "#B2B2B2",
+	color : '#1A3D7B',
+	font : {
+		fontSize : 15
+	},
+	text : "Add Photo",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#imagesBackground":
+{
+		left: "7%",
+		right: "7%",
+		top: 65,
+		bottom: "0%",
+		backgroundColor: '#E0E0E0',
+		borderWidth: 4,
+		borderColor: 'transparent'
+}
+
+"#img1":{
+		left : "10%",
+		top : "10%",
+		width: "37.5%",
+		height: "35%",
+		image: "/images/dummy/placeholder.png",
+		borderRadius: 4,
+		borderColor: 'black',
+	}
+	
+"#img2":{
+		right : "10%",
+		top : "10%",
+		width: "37.5%",
+		height: "35%",
+		image: "/images/dummy/placeholder.png",
+		borderRadius: 4,
+		borderColor: 'black',
+	}
+	
+"#img3":{
+		left : "10%",
+		top : "50%",
+		width: "37.5%",
+		height: "35%",
+		image: "/images/dummy/placeholder.png",
+		borderRadius: 4,
+		borderColor: 'black',
+	}
+	
+"#img4":{
+		right : "10%",
+		top : "50%",
+		width: "37.5%",
+		height: "35%",
+		image: "/images/dummy/placeholder.png",
+		borderRadius: 4,
+		borderColor: 'black',
+	}
+	
+"#overlayBackground":{
+	top : "100%",
+	left : 0,
+	right : 0,
+	height : "100%",
+	backgroundColor : 'black',
+	opacity : 0.45
+}
+
+"#overlayView":{
+	top : "100%",
+	left : 0,
+	right : 0,
+	height : "100%",
+	backgroundColor : 'transparent',
+}
+
+"#horizontalView":{
+	top : "0%",
+	left : 0,
+	right : 0,
+	height : "25%",
+	backgroundColor : 'transparent'
+}
+
+"#showScreenLabel":{
+	left : "3%",
+	width : "40%",
+	height : 'auto',
+	font : {
+		fontSize : 18,
+		fontWeight : 'bold'
+	},
+	color : 'white',
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+}
+
+"#switchToggle":{
+	value:false,
+	left : "47%",
+	titleOn : "ON",
+	titleOff : "OFF",
+	width : "20%",
+	height : 'auto',
+	
+}
+
+"#closeLabel":{
+	left : "68%",
+	right : '3%',
+	height : 40,
+	backgroundColor : 'white',
+	borderRadius : 5,
+	font : {
+		fontSize : 20
+	},
+	text : 'Close',
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+}
+
+"#contentLabel":{
+	top : "0%",
+	left : "7%",
+	right : "7%",
+	height : 'auto',
+	font : {
+		fontSize : 20,
+		fontWeight : 'bold'
+	},
+	color : 'white',
+	backgroundColor : 'transparent',
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	text : "Things to Photo\n\nDamage Own Vehicle\n3rd Party Vehicle(Front)\n3rd Party Vehicle(Back)\n3rd Party Vehicle(Nearside)\n3rd Party Vehicle(Offside)\nOccupants of 3rd party(if possible)\nScene Of Accodent"
+}
+
+"#overlayScroll":{
+	top : "30%",
+	left : "7%",
+	right : "7%",
+	contentWidth: 'auto',
+	contentHeight: 'auto',
+	scrollType: 'vertical',
+	showVerticalScrollIndicator: true,
+	backgroundColor : 'transparent'
+}
+

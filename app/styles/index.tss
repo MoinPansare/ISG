@@ -12,7 +12,6 @@
 }
 "#index":{
 	fullscreen: true,
-	statusBarStyle: Ti.UI.iPhone.StatusBar.TRANSLUCENT_BLACK
 }
 
 "#labelScroller":{

@@ -12,3 +12,4 @@
 
 Alloy.Globals.currentWindow = "";
 Alloy.Globals.winStack = [];
+Alloy.Globals.switchValue = -1;

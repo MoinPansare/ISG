@@ -30,7 +30,7 @@
 "#tab3":{
 	left : "40%",
 	backgroundColor : 'blue',
-	identifier : ''
+	identifier : 'IncidentWin'
 }
 
 "#tab4":{
