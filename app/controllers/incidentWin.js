@@ -23,7 +23,6 @@ var mainMapView;
 //----------------------------------------------------------------------------- function Body
 
 
-
 function goPrevious () {
   if ($.parentScrollableView.currentPageIndex == 0) {
 		return;
