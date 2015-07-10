@@ -2,7 +2,7 @@
 	<Window class="container" id="incidentWin">
 		<View id="toolBar">
 			<ImageView id="backImage" onClick="goPrevious"></ImageView>
-			<Label id="restartButton"></Label>
+			<Label id="restartButton" onClick="generatePdf"></Label>
 			<Label id="editORdone"></Label>
 			<Label id="nextButton" onClick="goNext"></Label>
 			<Label id="SendEmail"></Label>

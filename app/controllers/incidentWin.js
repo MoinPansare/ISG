@@ -58,10 +58,6 @@ function goNext() {
 	if ($.parentScrollableView.currentPageIndex == 6) {
 		return;
 	} else {
-		if($.parentScrollableView.currentPageIndex == 6)
-		{
-			loadFinalData();
-		}
 		$.parentScrollableView.moveNext();
 	}
 }
@@ -768,7 +764,9 @@ function createCustomViewReal(blob, index) {
 
 // load the data to email
 
-function loadFinalData () {
+function generatePdf () {
 	 
   
 }
+
+
