@@ -42,7 +42,160 @@
 						<Label id="contentLabel"></Label>
 					</ScrollView>
 				</View>
+				<Label id="bottomHint">(Click on the image to view and delete)</Label>
 			</View>
+			<View class="scrollableSubChilds" id="witnessView">
+				<ScrollView id="ListCollectionScroller"></ScrollView>
+				<Label id="addWitnessPin" onClick="animateToShowAddingScreen"></Label>
+				<View id="witnessData">
+					<ScrollView id="scrollViewToAddWitness">
+						<TextField class="detailsTextField" id="witnessNameTextField">
+							<KeyboardToolbar platform="ios">
+								<Toolbar>
+									<Items>
+										<Button class ="clearButton" onClick="clear1"></Button>
+										<Button class="flexi"></Button>
+										<Button class ="hidebutton" onClick="blurInput"></Button>
+									</Items>
+								</Toolbar>
+							</KeyboardToolbar>
+						</TextField>
+						<TextField class="detailsTextField" id="witnessLastNameTextField">
+							<KeyboardToolbar platform="ios">
+								<Toolbar>
+									<Items>
+										<Button class ="clearButton" onClick="clear4"></Button>
+										<Button class="flexi"></Button>
+										<Button class ="hidebutton" onClick="blurInput"></Button>
+									</Items>
+								</Toolbar>
+							</KeyboardToolbar>
+						</TextField>
+						<TextField class="detailsTextField" id="witnessEmailTextField">
+							<KeyboardToolbar platform="ios">
+								<Toolbar>
+									<Items>
+										<Button class ="clearButton" onClick="clear3"></Button>
+										<Button class="flexi"></Button>
+										<Button class ="hidebutton" onClick="blurInput"></Button>
+									</Items>
+								</Toolbar>
+							</KeyboardToolbar>
+						</TextField>
+						<TextField class="detailsTextField" id="witnessPhoneTextField">
+							<KeyboardToolbar platform="ios">
+								<Toolbar>
+									<Items>
+										<Button class ="clearButton" onClick="clear2"></Button>
+										<Button class="flexi"></Button>
+										<Button class ="hidebutton" onClick="blurInput"></Button>
+									</Items>
+								</Toolbar>
+							</KeyboardToolbar>
+						</TextField>
+						<Label id="descriptionLabel">Description</Label>
+						<TextArea id="witnessDescriptionTextArea">
+							<KeyboardToolbar platform="ios">
+								<Toolbar>
+									<Items>
+										<Button class ="clearButton" onClick="clear5"></Button>
+										<Button class="flexi"></Button>
+										<Button class ="hidebutton" onClick="blurInput"></Button>
+									</Items>
+								</Toolbar>
+							</KeyboardToolbar>
+						</TextArea>
+						<Label id="injuriesLabel">Injuries</Label>
+						<TextArea id="injuriesTextArea">
+							<KeyboardToolbar platform="ios">
+								<Toolbar>
+									<Items>
+										<Button class ="clearButton" onClick="clear6"></Button>
+										<Button class="flexi"></Button>
+										<Button class ="hidebutton" onClick="blurInput"></Button>
+									</Items>
+								</Toolbar>
+							</KeyboardToolbar>
+						</TextArea>
+						<Label id="saveLabel" onClick="validateAndSave"></Label>
+					</ScrollView>
+				</View>
+			</View>
+			
+			<View class="scrollableSubChilds" id="witnessViewReal">
+				<ScrollView id="ListCollectionScrollerWitnessReal"></ScrollView>
+				<Label id="addWitnessPinReal" onClick="animateToShowAddingScreenWitnessReal"></Label>
+				<View id="witnessDataReal">
+					<ScrollView id="scrollViewToAddWitnessReal">
+						<TextField class="detailsTextField" id="witnessNameTextFieldReal">
+							<KeyboardToolbar platform="ios">
+								<Toolbar>
+									<Items>
+										<Button class ="clearButton" onClick="clear1Real"></Button>
+										<Button class="flexi"></Button>
+										<Button class ="hidebutton" onClick="blurInputReal"></Button>
+									</Items>
+								</Toolbar>
+							</KeyboardToolbar>
+						</TextField>
+						<TextField class="detailsTextField" id="witnessPhoneReal">
+							<KeyboardToolbar platform="ios">
+								<Toolbar>
+									<Items>
+										<Button class ="clearButton" onClick="clear2Real"></Button>
+										<Button class="flexi"></Button>
+										<Button class ="hidebutton" onClick="blurInputReal"></Button>
+									</Items>
+								</Toolbar>
+							</KeyboardToolbar>
+						</TextField>
+						<TextField class="detailsTextField" id="witnessEmailTextFieldReal">
+							<KeyboardToolbar platform="ios">
+								<Toolbar>
+									<Items>
+										<Button class ="clearButton" onClick="clear3Real"></Button>
+										<Button class="flexi"></Button>
+										<Button class ="hidebutton" onClick="blurInputReal"></Button>
+									</Items>
+								</Toolbar>
+							</KeyboardToolbar>
+						</TextField>
+						<Label id="saveLabelReal" onClick="validateAndSaveWitnessReal"></Label>
+					</ScrollView>
+				</View>
+			</View>
+			<View class="scrollableSubChilds" id="finalDisplay">
+				<ScrollView id="finalScrollView">
+					<View id="containerForResult">
+						<View class="ReseltCell" id="dateView">
+							<Label class="titleLabel">Date</Label>
+							<Label class="detailLabel" id="actualDate"></Label>
+						</View>
+						<View class="ReseltCell" id="locationView">
+							<Label class="titleLabel">Location</Label>
+							<Label class="detailLabel" id="actualLocation"></Label>
+						</View>
+						<View id="photosView">
+							<Label class="titleLabel">Photos</Label>
+							<View id="imageContainer">
+								<ImageView class="resultImages" id="resImg1"></ImageView>
+								<ImageView class="resultImages" id="resImg2"></ImageView>
+								<ImageView class="resultImages" id="resImg3"></ImageView>
+								<ImageView class="resultImages" id="resImg4"></ImageView>
+							</View>
+						</View>
+						<View class="ReseltCell" id="otherDriversResultView">
+							<Label class="titleLabel">Other Drivers</Label>
+							<Label class="detailLabel" id="numberOfDrivers">2 Drivers</Label>
+						</View>
+						<View class="ReseltCell" id="witnessResultView">
+							<Label class="titleLabel">Witnesses</Label>
+							<Label class="detailLabel" id="numberOfWitness">4 Witnesses</Label>
+						</View>
+					</View>
+				</ScrollView>
+			</View>
+			
 		</ScrollableView>
 		<Require type="view" src="menu" id="menu"></Require>
 	</Window>

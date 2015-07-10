@@ -222,40 +222,44 @@
 		left : "10%",
 		top : "10%",
 		width: "37.5%",
-		height: "35%",
+		height: "30%",
 		image: "/images/dummy/placeholder.png",
 		borderRadius: 4,
 		borderColor: 'black',
+		borderWidth : 3
 	}
 	
 "#img2":{
 		right : "10%",
 		top : "10%",
 		width: "37.5%",
-		height: "35%",
+		height: "30%",
 		image: "/images/dummy/placeholder.png",
 		borderRadius: 4,
 		borderColor: 'black',
+		borderWidth : 3
 	}
 	
 "#img3":{
 		left : "10%",
 		top : "50%",
 		width: "37.5%",
-		height: "35%",
+		height: "30%",
 		image: "/images/dummy/placeholder.png",
 		borderRadius: 4,
 		borderColor: 'black',
+		borderWidth : 3
 	}
 	
 "#img4":{
 		right : "10%",
 		top : "50%",
 		width: "37.5%",
-		height: "35%",
+		height: "30%",
 		image: "/images/dummy/placeholder.png",
 		borderRadius: 4,
 		borderColor: 'black',
+		borderWidth : 3
 	}
 	
 "#overlayBackground":{
@@ -320,8 +324,8 @@
 
 "#contentLabel":{
 	top : "0%",
-	left : "7%",
-	right : "7%",
+	left : "0%",
+	right : "0%",
 	height : 'auto',
 	font : {
 		fontSize : 20,
@@ -344,3 +348,404 @@
 	backgroundColor : 'transparent'
 }
 
+"#bottomHint":{
+	bottom : 30,
+	left : 0,
+	right : 0,
+	font : {
+		fontSize : 15
+	},
+	backgroundColor : 'transparent',
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#witnessView":{
+	addingViewDisplayed : 0,
+}
+
+"#ListCollectionScroller":{
+	top : "15%",
+	left : "2%",
+	right : "2%",
+	backgroundColor : 'transparent',
+	contentWidth: 'auto',
+	contentHeight: 'auto',
+	scrollType: 'vertical',
+	showVerticalScrollIndicator: true,
+}
+
+"#addWitnessPin":{
+	top : "5%",
+	left : "15%",
+	height : 45,
+	right : "15%",
+	backgroundColor : 'white',
+	borderRadius : 5,
+	borderColor : "#B2B2B2",
+	color : '#1A3D7B',
+	font : {
+		fontSize : 15
+	},
+	text : "Add Other Driver",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#witnessData":{
+	left : "100%",
+	top : "0%",
+	height : "100%",
+	width : "100%",
+	backgroundColor : "#E0E0E0",
+	toEdit : 0,
+}
+
+"#scrollViewToAddWitness":{
+	left : "0",
+	top : 0,
+	width : "100%",
+	height : "100%",
+	backgroundColor : '#E0E0E0',
+	contentWidth: 'auto',
+	contentHeight: 'auto',
+	scrollType: 'vertical',
+	showVerticalScrollIndicator: true,
+}
+
+".detailsTextField":{
+	left : 15,
+	right : 15,
+	borderColor : 'black',
+	borderRadius : 2,
+	backgroundColor : 'white',
+	height : 40,
+	font : {
+		fontSize : 15,fontWeight : 'bold'
+	},
+	paddingLeft : 7
+}
+
+"#witnessNameTextField":{
+	top : 10,
+	hintText : " Name",
+	keyboardType : Titanium.UI.KEYBOARD_APPEARANCE_DEFAULT,
+	autocapitalization:Titanium.UI.TEXT_AUTOCAPITALIZATION_WORDS,
+	id : "",
+}
+
+"#witnessPhoneTextField":{
+	top : 60,
+	hintText : " Telephone",
+	keyboardType:Titanium.UI.KEYBOARD_NUMBER_PAD,
+}
+
+
+"#witnessEmailTextField":{
+	top : 110,
+	hintText : " Email Id",
+	keyboardType: Titanium.UI.KEYBOARD_EMAIL,
+}
+
+"#witnessLastNameTextField":{
+	top : 160,
+	width : "75%",
+	hintText : " Car Registration",
+	keyboardType : Titanium.UI.KEYBOARD_APPEARANCE_DEFAULT,
+	autocapitalization:Titanium.UI.TEXT_AUTOCAPITALIZATION_WORDS,
+}
+
+"#descriptionLabel":{
+	top : 210,
+	left : 15,
+	width : 'auto',
+	height : 30,
+	font : {
+		fontSize : 15,fontWeight : 'bold'
+	},
+	backgroundColor : 'transparent'
+}
+
+"#witnessDescriptionTextArea":{
+	left : 15,
+	right : 15,
+	top : 250,
+	height : 70,
+	backgroundColor : 'white',
+	font : {
+		fontSize : 15,
+		fontWeight : 'bold'
+	},
+	borderRadius : 2,
+	hintText : "Description",
+	autocapitalization:Titanium.UI.TEXT_AUTOCAPITALIZATION_SENTENCES,
+	paddingLeft : 7
+}
+
+"#injuriesLabel":{
+	top : 330,
+	left : 15,
+	width : 'auto',
+	height : 30,
+	font : {
+		fontSize : 13,
+		fontWeight : 'bold'
+	},
+	backgroundColor : 'transparent'
+}
+
+"#injuriesTextArea":{
+	left : 15,
+	right : 15,
+	top : 370,
+	height : 70,
+	backgroundColor : 'white',
+	font : {
+		fontSize : 14,
+		fontWeight : 'bold'
+	},
+	borderRadius : 2,
+	hintText : " Injuries",
+	autocapitalization:Titanium.UI.TEXT_AUTOCAPITALIZATION_SENTENCES,
+	paddingLeft : 7
+}
+
+"#saveLabel":{
+	backgroundColor : '#6E85A7',
+	text : "SAVE",
+	top : 450,
+	left : "20%",
+	right : "20%",
+	height : 40,
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	font : {
+		fontSize : 14,
+		fontWeight : 'bold'
+	}
+}
+
+".hidebutton":{
+	right : "5%",
+	height: 32,
+	width:67,
+	title:'Done'
+},
+
+".flexi":{
+	systemButton:Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+}
+
+".clearButton":{
+	height: 32,
+	width:67,
+	title:'Clear'
+}
+
+"#witnessViewReal":{
+	addingViewDisplayed : 0,
+}
+
+"#ListCollectionScrollerWitnessReal":{
+	top : "15%",
+	left : "2%",
+	right : "2%",
+	backgroundColor : 'transparent',
+	contentWidth: 'auto',
+	contentHeight: 'auto',
+	scrollType: 'vertical',
+	showVerticalScrollIndicator: true,
+}
+
+"#addWitnessPinReal":{
+	top : "5%",
+	left : "15%",
+	height : 45,
+	right : "15%",
+	backgroundColor : 'white',
+	borderRadius : 5,
+	borderColor : "#B2B2B2",
+	color : '#1A3D7B',
+	font : {
+		fontSize : 15
+	},
+	text : "Add Witness",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#witnessDataReal":{
+	left : "100%",
+	top : "0%",
+	height : "100%",
+	width : "100%",
+	backgroundColor : "#E0E0E0",
+	toEdit : 0,
+}
+
+"#scrollViewToAddWitnessReal":{
+	left : "0",
+	top : 0,
+	width : "100%",
+	height : "100%",
+	backgroundColor : '#E0E0E0',
+	contentWidth: 'auto',
+	contentHeight: 'auto',
+	scrollType: 'vertical',
+	showVerticalScrollIndicator: true,
+}
+
+"#witnessNameTextFieldReal":{
+	top : 10,
+	hintText : " Name",
+	keyboardType : Titanium.UI.KEYBOARD_APPEARANCE_DEFAULT,
+	autocapitalization:Titanium.UI.TEXT_AUTOCAPITALIZATION_WORDS,
+	id : "",
+}
+
+"#witnessPhoneReal":{
+	top : 60,
+	hintText : " Telephone",
+	keyboardType:Titanium.UI.KEYBOARD_NUMBER_PAD,
+}
+
+"#witnessEmailTextFieldReal":{
+	top : 110,
+	hintText : " Email Id",
+	keyboardType: Titanium.UI.KEYBOARD_EMAIL,
+}
+
+"#saveLabelReal":{
+	backgroundColor : '#6E85A7',
+	text : "SAVE",
+	bottom : 30,
+	left : "20%",
+	right : "20%",
+	height : 40,
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	font : {
+		fontSize : 14,
+		fontWeight : 'bold'
+	}
+}
+
+"#finalScrollView":{
+	left : "0%",
+	top : "0%",
+	width : "100%",
+	height : 'auto',
+	contentWidth: 'auto',
+	contentHeight: 'auto',
+	scrollType: 'vertical',
+	showVerticalScrollIndicator: true,
+	backgroundColor: '#E0E0E0'
+}
+
+"#containerForResult":{
+	top : "4%",
+	left : 10,
+	right : 10,
+	height : 459,
+	backgroundColor : 'white',
+	borderRadius : 4
+}
+
+".ReseltCell":{
+	left : -1,
+	right: -1,
+	height: 70,
+	backgroundColor: 'white',
+	bubbleParent: false,
+	borderColor : 'black'
+}
+
+".titleLabel":{
+		top: 5,
+		left: 10,
+		height: 25,
+		font: {
+			fontSize: 16,
+			fontWeight: 'bold'
+		},
+		bubbleParent: false
+	}
+	
+"#dateView":{
+	top : -1
+}
+
+".detailLabel":{
+	bottom: 5,
+	left: 10,
+	height: 25,
+	font: {
+		fontSize: 16
+	},
+	bubbleParent: true,
+}
+
+"#actualDate":{
+	text : "23/5/2015 3:00 pm"
+}
+
+"#locationView":{
+	top : 69,
+}
+
+"#actualLocation":{
+	text : "Some Place in Mumbai"
+}
+
+"#photosView":{
+	left : -1,
+	right : -1,
+	top : 139,
+	height : 180,
+	borderColor : 'black'
+}
+
+
+"#imageContainer":
+{
+	left: "30%",
+	right: "5%",
+	top: 0,
+	bottom: "5%",
+	backgroundColor: 'transparent',
+	borderWidth: 4,
+	borderColor: 'transparent'
+}
+
+".resultImages":{
+		width: "37.5%",
+		height: "40%",
+		image: "/images/dummy/placeholder.png",
+		borderRadius: 4,
+		borderColor: 'black',
+		borderWidth: 3
+	}
+
+"#resImg1":{
+	left : "10%",
+	top : "10%",
+}
+
+"#resImg2":{
+	right : "10%",
+	top : "10%",
+}
+
+"#resImg3":{
+	left : "10%",
+	top : "55%",
+}
+
+"#resImg4":{
+	right : "10%",
+	top : "55%",
+}
+
+"#otherDriversResultView":{
+	top : 319,
+}
+
+"#witnessResultView":{
+	top : 389,
+	height : 73
+}
