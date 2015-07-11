@@ -11,7 +11,26 @@ Ti.Geolocation.purpose = 'Location based services for the app';
 Ti.Geolocation.accuracy = Ti.Geolocation.ACCURACY_NEAREST_TEN_METERS;
 Ti.Geolocation.preferredProvider = Ti.Geolocation.PROVIDER_GPS;
 
-//-----------------------------------------------------------------------------variable declaration
+
+
+//-----------------------------------------------------------------------------pdf generation
+// works for snapshot
+
+
+//Require the securely module into your project
+// var pdf = require('bencoding.pdf');
+//Create a new properties object
+// var converters = pdf.createConverters();
+// var webView;
+
+
+var _jsPDF = require('./jsPDFMod/TiJSPDF');
+var _isAndroid = Ti.Platform.osname === 'android';
+var _tempFile = null;
+
+// -----------------------------------------------------------------------------variable declaration
+
+
 
 var Map = require('ti.map');
 var mainMapView;
@@ -54,13 +73,15 @@ function goPrevious() {
 
 
 
+
 function goNext() {
-	if ($.parentScrollableView.currentPageIndex == 6) {
+	if ($.parentScrollableView.currentPageIndex == 7) {
 		return;
 	} else {
 		$.parentScrollableView.moveNext();
 	}
 }
+
 
 
 $.parentScrollableView.addEventListener('scrollend', function(e) {
@@ -125,7 +146,75 @@ $.parentScrollableView.addEventListener('scrollend', function(e) {
 			anim = null;
 		}
 	}
+	
+	
+	if ($.parentScrollableView.currentPageIndex == 7) {
+		
+		var doc = new _jsPDF();
+        doc.setProperties({
+            title: 'Title',
+            subject: 'This is the subject',		
+            author: 'Moin',
+            keywords: 'one, two, three',
+            creator: 'Moin'
+        });
+        
+        var imgSample1 = Ti.Filesystem.resourcesDirectory + 'image1.jpg';
+        doc.addImage(imgSample1, 'JPEG', 10, 20, 128, 96);
 
+        doc.setFont("helvetica");
+        doc.setFontType("bold");
+        doc.setFontSize(24);
+        doc.text(20, 180, ' Moin');
+        doc.text(20, 190, 'Code with image \nusing Appcelerator studio..');
+
+        doc.addPage();
+        doc.rect(20, 120, 10, 10); // empty square
+        doc.rect(40, 120, 10, 10, 'F'); // filled square
+
+        var imgSample2 = Ti.Filesystem.resourcesDirectory + 'image2.jpg';
+        doc.addImage(imgSample2, 'JPEG', 70, 10, 100, 120);
+
+        doc.setFont("helvetica");
+        doc.setFontType("normal");
+        doc.setFontSize(24);
+        doc.text(20, 180, 'This is what I looked like trying to get');
+        doc.text(20, 190, 'the save function into the plugin system.');
+        doc.text(20, 200, 'It works now so all of you who doubt me fuck you -- Moin ');
+
+        doc.text(20, 240, (new Date()).toString());
+
+        var timeStampName = new Date().getTime();
+        if (_tempFile != null) {
+            _tempFile.deleteFile();
+        }
+        _tempFile = Ti.Filesystem.getFile(Ti.Filesystem.getTempDirectory(), timeStampName + '.pdf');			
+        doc.save(_tempFile);
+				
+		if (_isAndroid) {
+			var intent = Ti.Android.createIntent({
+				action: Ti.Android.ACTION_VIEW,
+				type: "application/pdf",
+				data: _tempFile.nativePath
+			});
+			
+			try {
+				Ti.Android.currentActivity.startActivity(intent);
+			} catch(e) {
+				Ti.API.debug(e);
+				alert('You have no apps on your device that can open PDFs. Please download one from the marketplace.');
+			}
+		} else {
+
+            var pdfview = Ti.UI.createWebView({
+                backgroundColor: '#eee',
+                url: _tempFile.nativePath,
+                height: Ti.UI.FILL,
+                width: Ti.UI.FILL
+            });
+            $.PDF_View_1.add(pdfview);
+		}
+	}
 });
 
 
@@ -764,9 +853,24 @@ function createCustomViewReal(blob, index) {
 
 // load the data to email
 
-function generatePdf () {
-	 
-  
+
+
+function generatePdf() {
+	Ti.Media.takeScreenshot(function(event) {
+		// set blob on image view
+		var image = event.media;
+		var pdfBlob = converters.convertImageToPDF(image, 100);
+		var pdfFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'text_moin2.pdf');
+		pdfFile.write(pdfBlob);
+	});
+	
+	setTimeout(function(e) {
+		
+	}, 3000); 
+
+	
 }
+
+
 
 

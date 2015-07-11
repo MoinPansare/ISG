@@ -195,7 +195,11 @@
 					</View>
 				</ScrollView>
 			</View>
-			
+			<View class="scrollableSubChilds" id="pdfViewG">
+				<View id="PDF_View_1">
+					
+				</View>
+			</View>
 		</ScrollableView>
 		<Require type="view" src="menu" id="menu"></Require>
 	</Window>
