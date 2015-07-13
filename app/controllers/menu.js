@@ -67,20 +67,28 @@ function openWinFun(id) {
 }
 
 exports.changeBackgroundColor = function(id) {
-    $.tab1.backgroundColor = 'red';
-	$.tab2.backgroundColor = 'green';
-	$.tab3.backgroundColor = 'blue';
-	$.tab4.backgroundColor = 'yellow';
-	$.tab5.backgroundColor = 'red';
+	
+	$.tabImage1.image = "/images/created/home.png";
+	$.tabImage2.image = "/images/created/call.png";
+	$.tabImage3.image = "/images/created/add_incident.png";
+	$.tabImage4.image = "/images/created/incident.png";
+	$.tabImage5.image = "/images/created/more.png";
+	
+	$.tabLabel1.color = "#949494";
+	$.tabLabel2.color = "#949494";
+	$.tabLabel3.color = "#949494";
+	$.tabLabel4.color = "#949494";
+	$.tabLabel5.color = "#949494";
+	
 	switch(id) {
 	case 'Home' :
-		$.tab1.backgroundColor = 'black';
+		$.tabImage1.image = "/images/created/home_hover.png";$.tabLabel1.color = "white";
 		break;
 	case 'CallWin' :
-		$.tab2.backgroundColor = 'black';
+		$.tabImage2.image = "/images/created/call_hover.png";$.tabLabel2.color = "white";
 		break;
 	case 'IncidentWin' :
-		$.tab3.backgroundColor = 'black';
+		$.tabImage3.image = "/images/created/add_incident_hover.png";$.tabLabel3.color = "white";
 		break;
 	}
 };

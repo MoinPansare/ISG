@@ -1,3 +1,297 @@
+function sprintf( ) {
+    // Return a formatted string  
+    // 
+    // version: 903.3016
+    // discuss at: http://phpjs.org/functions/sprintf
+    // +   original by: Ash Searle (http://hexmen.com/blog/)
+    // + namespaced by: Michael White (http://getsprink.com)
+    // +    tweaked by: Jack
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +      input by: Paulo Ricardo F. Santos
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +      input by: Brett Zamir (http://brettz9.blogspot.com)
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // *     example 1: sprintf("%01.2f", 123.1);
+    // *     returns 1: 123.10
+    // *     example 2: sprintf("[%10s]", 'monkey');
+    // *     returns 2: '[    monkey]'
+    // *     example 3: sprintf("[%'#10s]", 'monkey');
+    // *     returns 3: '[####monkey]'
+    var regex = /%%|%(\d+\$)?([-+\'#0 ]*)(\*\d+\$|\*|\d+)?(\.(\*\d+\$|\*|\d+))?([scboxXuidfegEG])/g;
+    var a = arguments, i = 0, format = a[i++];
+
+    // pad()
+    var pad = function(str, len, chr, leftJustify) {
+        if (!chr) chr = ' ';
+        var padding = (str.length >= len) ? '' : Array(1 + len - str.length >>> 0).join(chr);
+        return leftJustify ? str + padding : padding + str;
+    };
+
+    // justify()
+    var justify = function(value, prefix, leftJustify, minWidth, zeroPad, customPadChar) {
+        var diff = minWidth - value.length;
+        if (diff > 0) {
+            if (leftJustify || !zeroPad) {
+                value = pad(value, minWidth, customPadChar, leftJustify);
+            } else {
+                value = value.slice(0, prefix.length) + pad('', diff, '0', true) + value.slice(prefix.length);
+            }
+        }
+        return value;
+    };
+
+    // formatBaseX()
+    var formatBaseX = function(value, base, prefix, leftJustify, minWidth, precision, zeroPad) {
+        // Note: casts negative numbers to positive ones
+        var number = value >>> 0;
+        prefix = prefix && number && {'2': '0b', '8': '0', '16': '0x'}[base] || '';
+        value = prefix + pad(number.toString(base), precision || 0, '0', false);
+        return justify(value, prefix, leftJustify, minWidth, zeroPad);
+    };
+
+    // formatString()
+    var formatString = function(value, leftJustify, minWidth, precision, zeroPad, customPadChar) {
+        if (precision != null) {
+            value = value.slice(0, precision);
+        }
+        return justify(value, '', leftJustify, minWidth, zeroPad, customPadChar);
+    };
+
+    // doFormat()
+    var doFormat = function(substring, valueIndex, flags, minWidth, _, precision, type) {
+        var number;
+        var prefix;
+        var method;
+        var textTransform;
+        var value;
+
+        if (substring == '%%') return '%';
+
+        // parse flags
+        var leftJustify = false, positivePrefix = '', zeroPad = false, prefixBaseX = false, customPadChar = ' ';
+        var flagsl = flags.length;
+        for (var j = 0; flags && j < flagsl; j++) switch (flags.charAt(j)) {
+            case ' ': positivePrefix = ' '; break;
+            case '+': positivePrefix = '+'; break;
+            case '-': leftJustify = true; break;
+            case "'": customPadChar = flags.charAt(j+1); break;
+            case '0': zeroPad = true; break;
+            case '#': prefixBaseX = true; break;
+        }
+
+        // parameters may be null, undefined, empty-string or real valued
+        // we want to ignore null, undefined and empty-string values
+        if (!minWidth) {
+            minWidth = 0;
+        } else if (minWidth == '*') {
+            minWidth = +a[i++];
+        } else if (minWidth.charAt(0) == '*') {
+            minWidth = +a[minWidth.slice(1, -1)];
+        } else {
+            minWidth = +minWidth;
+        }
+
+        // Note: undocumented perl feature:
+        if (minWidth < 0) {
+            minWidth = -minWidth;
+            leftJustify = true;
+        }
+
+        if (!isFinite(minWidth)) {
+            throw new Error('sprintf: (minimum-)width must be finite');
+        }
+
+        if (!precision) {
+            precision = 'fFeE'.indexOf(type) > -1 ? 6 : (type == 'd') ? 0 : void(0);
+        } else if (precision == '*') {
+            precision = +a[i++];
+        } else if (precision.charAt(0) == '*') {
+            precision = +a[precision.slice(1, -1)];
+        } else {
+            precision = +precision;
+        }
+
+        // grab value using valueIndex if required?
+        value = valueIndex ? a[valueIndex.slice(0, -1)] : a[i++];
+
+        switch (type) {
+            case 's': return formatString(String(value), leftJustify, minWidth, precision, zeroPad, customPadChar);
+            case 'c': return formatString(String.fromCharCode(+value), leftJustify, minWidth, precision, zeroPad);
+            case 'b': return formatBaseX(value, 2, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
+            case 'o': return formatBaseX(value, 8, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
+            case 'x': return formatBaseX(value, 16, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
+            case 'X': return formatBaseX(value, 16, prefixBaseX, leftJustify, minWidth, precision, zeroPad).toUpperCase();
+            case 'u': return formatBaseX(value, 10, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
+            case 'i':
+            case 'd': {
+                number = parseInt(+value);
+                prefix = number < 0 ? '-' : positivePrefix;
+                value = prefix + pad(String(Math.abs(number)), precision, '0', false);
+                return justify(value, prefix, leftJustify, minWidth, zeroPad);
+            }
+            case 'e':
+            case 'E':
+            case 'f':
+            case 'F':
+            case 'g':
+            case 'G': {
+                number = +value;
+                prefix = number < 0 ? '-' : positivePrefix;
+                method = ['toExponential', 'toFixed', 'toPrecision']['efg'.indexOf(type.toLowerCase())];
+                textTransform = ['toString', 'toUpperCase']['eEfFgG'.indexOf(type) % 2];
+                value = prefix + Math.abs(number)[method](precision);
+                return justify(value, prefix, leftJustify, minWidth, zeroPad)[textTransform]();
+            }
+            default: return substring;
+        }
+    };
+
+    return format.replace(regex, doFormat);
+}
+
+/**
+*
+*  Base64 encode / decode
+*  http://www.webtoolkit.info/
+*
+**/
+
+var Base64 = {
+
+	// private property
+	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+	// public method for encoding
+	encode : function (input) {
+		var output = "";
+		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+		var i = 0;
+
+		input = Base64._utf8_encode(input);
+
+		while (i < input.length) {
+
+			chr1 = input.charCodeAt(i++);
+			chr2 = input.charCodeAt(i++);
+			chr3 = input.charCodeAt(i++);
+
+			enc1 = chr1 >> 2;
+			enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+			enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+			enc4 = chr3 & 63;
+
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 64;
+			} else if (isNaN(chr3)) {
+				enc4 = 64;
+			}
+
+			output = output +
+			this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+			this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+
+		}
+
+		return output;
+	},
+
+	// public method for decoding
+	decode : function (input) {
+		var output = "";
+		var chr1, chr2, chr3;
+		var enc1, enc2, enc3, enc4;
+		var i = 0;
+
+		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+		while (i < input.length) {
+
+			enc1 = this._keyStr.indexOf(input.charAt(i++));
+			enc2 = this._keyStr.indexOf(input.charAt(i++));
+			enc3 = this._keyStr.indexOf(input.charAt(i++));
+			enc4 = this._keyStr.indexOf(input.charAt(i++));
+
+			chr1 = (enc1 << 2) | (enc2 >> 4);
+			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+			chr3 = ((enc3 & 3) << 6) | enc4;
+
+			output = output + String.fromCharCode(chr1);
+
+			if (enc3 != 64) {
+				output = output + String.fromCharCode(chr2);
+			}
+			if (enc4 != 64) {
+				output = output + String.fromCharCode(chr3);
+			}
+
+		}
+
+		output = Base64._utf8_decode(output);
+
+		return output;
+
+	},
+
+	// private method for UTF-8 encoding
+	_utf8_encode : function (string) {
+		string = string.replace(/\r\n/g,"\n");
+		var utftext = "";
+
+		for (var n = 0; n < string.length; n++) {
+
+			var c = string.charCodeAt(n);
+
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			}
+			else if((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+			else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+
+		}
+
+		return utftext;
+	},
+
+	// private method for UTF-8 decoding
+	_utf8_decode : function (utftext) {
+		var string = "";
+		var i = 0;
+		var c = c1 = c2 = 0;
+
+		while ( i < utftext.length ) {
+
+			c = utftext.charCodeAt(i);
+
+			if (c < 128) {
+				string += String.fromCharCode(c);
+				i++;
+			}
+			else if((c > 191) && (c < 224)) {
+				c2 = utftext.charCodeAt(i+1);
+				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+				i += 2;
+			}
+			else {
+				c2 = utftext.charCodeAt(i+1);
+				c3 = utftext.charCodeAt(i+2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+			}
+
+		}
+
+		return string;
+	}
+
+}
+
 /** @preserve jsPDF ( ${buildDate} ${commitID} )
 Copyright (c) 2010 James Hall, https://github.com/MrRio/jsPDF
 Copyright (c) 2012 Willow Systems Corporation, willow-systems.com
@@ -140,7 +434,6 @@ var getObjectLength = typeof Object.keys === 'function' ?
 
 /**
 PubSub implementation
-
 @class
 @name PubSub
 */
@@ -163,7 +456,6 @@ var PubSub = function(context){
 	this.topics = {}
 	/**
 	Stores what will be `this` within the callback functions.
-
 	@private
 	@fieldOf PubSub#
 	*/
@@ -458,10 +750,8 @@ function jsPDF(/** String */ orientation, /** String */ unit, /** String */ form
 	}
 	/**
 	FontObject describes a particular font as member of an instnace of jsPDF
-
 	It's a collection of properties like 'id' (to be used in PDF stream),
 	'fontName' (font's family name), 'fontStyle' (font's style variant label)
-
 	@class
 	@public
 	@property id {String} PDF-document-instance-specific label assinged to the font.
@@ -613,7 +903,6 @@ function jsPDF(/** String */ orientation, /** String */ unit, /** String */ form
 	Returns a document-specific font key - a label assigned to a
 	font name + font type combination at the time the font was added
 	to the font inventory.
-
 	Font key is used as label for the desired font for a block of text
 	to be added to the PDF document stream.
 	@private
@@ -709,27 +998,22 @@ function jsPDF(/** String */ orientation, /** String */ unit, /** String */ form
 		specified in the Unicode standard, version 2.0. Commonly used Unicode values
 		are represented as 2 bytes per character, with the high-order byte appearing first
 		in the string."
-
 		In other words, if there are chars in a string with char code above 255, we
 		recode the string to UCS2 BE - string doubles in length and BOM is prepended.
-
 		HOWEVER!
 		Actual *content* (body) text (as opposed to strings used in document properties etc)
 		does NOT expect BOM. There, it is treated as a literal GID (Glyph ID)
-
 		Because of Adobe's focus on "you subset your fonts!" you are not supposed to have
 		a font that maps directly Unicode (UCS2 / UTF16BE) code to font GID, but you could
 		fudge it with "Identity-H" encoding and custom CIDtoGID map that mimics Unicode
 		code page. There, however, all characters in the stream are treated as GIDs,
 		including BOM, which is the reason we need to skip BOM in content text (i.e. that
 		that is tied to a font).
-
 		To signal this "special" PDFEscape / to8bitStream handling mode,
 		API.text() function sets (unless you overwrite it with manual values
 		given to API.text(.., flags) )
 			flags.autoencode = true
 			flags.noBOM = true
-
 		*/
 
 		/*
@@ -918,7 +1202,6 @@ function jsPDF(/** String */ orientation, /** String */ unit, /** String */ form
 	Adds (and transfers the focus to) new page to the PDF document.
 	@function
 	@returns {jsPDF} 
-
 	@methodOf jsPDF#
 	@name addPage
 	 */
@@ -1324,7 +1607,6 @@ function jsPDF(/** String */ orientation, /** String */ unit, /** String */ form
 	/**
 	Returns an object - a tree of fontName to fontStyle relationships available to 
 	active PDF document. 
-
 	@public
 	@function
 	@returns {Object} Like {'times':['normal', 'italic', ... ], 'arial':['normal', 'bold', ... ], ... }
@@ -1502,7 +1784,6 @@ function jsPDF(/** String */ orientation, /** String */ unit, /** String */ form
 		datauri (alias datauri) - Data-Url-formatted data pushed into current window's location (effectively reloading the window with contents of the PDF).
 	
 	If `type` argument is undefined, output is raw body of resulting PDF returned as a string.
-
 	@param {String} type A string identifying one of the possible output types.
 	@param {Object} options An object providing some additional signalling to PDF generator.
 	@function
@@ -1584,17 +1865,14 @@ function jsPDF(/** String */ orientation, /** String */ unit, /** String */ form
 jsPDF.API is a STATIC property of jsPDF class.
 jsPDF.API is an object you can add methods and properties to.
 The methods / properties you add will show up in new jsPDF objects.
-
 One property is prepopulated. It is the 'events' Object. Plugin authors can add topics, callbacks to this object. These will be reassigned to all new instances of jsPDF. 
 Examples: 
 	jsPDF.API.events['initialized'] = function(){ 'this' is API object }
 	jsPDF.API.events['addFont'] = function(added_font_object){ 'this' is API object }
-
 @static
 @public
 @memberOf jsPDF
 @name API
-
 @example
 	jsPDF.API.mymethod = function(){
 		// 'this' will be ref to internal API object. see jsPDF source
@@ -1609,3 +1887,291 @@ jsPDF.API = {'events':[]}
 
 return jsPDF
 })()
+
+/** @preserve 
+jsPDF addImage plugin (JPEG only at this time)
+Copyright (c) 2012 https://github.com/siefkenj/
+*/
+
+/**
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * ====================================================================
+ */
+
+;(function(jsPDFAPI) {
+'use strict'
+
+var namespace = 'addImage_'
+
+// takes a string imgData containing the raw bytes of
+// a jpeg image and returns [width, height]
+// Algorithm from: http://www.64lines.com/jpeg-width-height
+var getJpegSize = function(filename) {
+	'use strict'
+    var imgFile = Ti.Filesystem.getFile(filename);
+    var imgData = imgFile.read();
+
+	var width, height;
+	// Verify we have a valid jpeg header 0xff,0xd8,0xff,0xe0,?,?,'J','F','I','F',0x00
+	if (!imgData.charCodeAt(0) === 0xff ||
+		!imgData.charCodeAt(1) === 0xd8 ||
+		!imgData.charCodeAt(2) === 0xff ||
+		!imgData.charCodeAt(3) === 0xe0 ||
+		!imgData.charCodeAt(6) === 'J'.charCodeAt(0) ||
+		!imgData.charCodeAt(7) === 'F'.charCodeAt(0) ||
+		!imgData.charCodeAt(8) === 'I'.charCodeAt(0) ||
+		!imgData.charCodeAt(9) === 'F'.charCodeAt(0) ||
+		!imgData.charCodeAt(10) === 0x00) {
+			throw new Error('getJpegSize requires a binary jpeg file')
+	}
+	var blockLength = imgData.charCodeAt(4)*256 + imgData.charCodeAt(5);
+	var i = 4, len = imgData.length;
+	while ( i < len ) {
+		i += blockLength;
+		if (imgData.charCodeAt(i) !== 0xff) {
+			throw new Error('getJpegSize could not find the size of the image');
+		}
+		if (imgData.charCodeAt(i+1) === 0xc0) {
+			height = imgData.charCodeAt(i+5)*256 + imgData.charCodeAt(i+6);
+			width = imgData.charCodeAt(i+7)*256 + imgData.charCodeAt(i+8);
+			return [width, height];
+		} else {
+			i += 2;
+			blockLength = imgData.charCodeAt(i)*256 + imgData.charCodeAt(i+1)
+		}
+	}
+}
+// Image functionality ported from pdf.js
+, putImage = function(img) {
+	var objectNumber = this.internal.newObject()
+	, out = this.internal.write
+	, putStream = this.internal.putStream
+
+	img['n'] = objectNumber
+
+	out('<</Type /XObject')
+	out('/Subtype /Image')
+	out('/Width ' + img['imageWidth'])
+	out('/Height ' + img['imageHeight'])
+	if (img['cs'] === 'Indexed') {
+		out('/ColorSpace [/Indexed /DeviceRGB '
+				+ (img['pal'].length / 3 - 1) + ' ' + (objectNumber + 1)
+				+ ' 0 R]');
+	} else {
+		out('/ColorSpace /' + img['cs']);
+		if (img['cs'] === 'DeviceCMYK') {
+			out('/Decode [1 0 1 0 1 0 1 0]');
+		}
+	}
+	out('/BitsPerComponent ' + img['bpc']);
+	if ('f' in img) {
+		out('/Filter /' + img['f']);
+	}
+	if ('dp' in img) {
+		out('/DecodeParms <<' + img['dp'] + '>>');
+	}
+	if ('trns' in img && img['trns'].constructor == Array) {
+		var trns = '';
+		for ( var i = 0; i < img['trns'].length; i++) {
+			trns += (img[trns][i] + ' ' + img['trns'][i] + ' ');
+			out('/Mask [' + trns + ']');
+		}
+	}
+	if ('smask' in img) {
+		out('/SMask ' + (objectNumber + 1) + ' 0 R');
+	}
+	out('/Length ' + img['fileSize'] + '>>');
+
+	putStream('#image ' + img['data'] + '#');
+
+	out('endobj');
+}
+, putResourcesCallback = function() {
+	var images = this.internal.collections[namespace + 'images']
+	for ( var i in images ) {
+		putImage.call(this, images[i])
+	}
+}
+, putXObjectsDictCallback = function(){
+	var images = this.internal.collections[namespace + 'images']
+	, out = this.internal.write
+	, image
+	for (var i in images) {
+		image = images[i]
+		out(
+			'/I' + image['i']
+			, image['n']
+			, '0'
+			, 'R'
+		)
+	}
+}
+
+jsPDFAPI.addImage = function(imageData, format, x, y, w, h, imageWidth, imageHeight, fileSize) {
+	'use strict'
+
+	if (format.toUpperCase() !== 'JPEG') {
+		throw new Error('addImage currently only supports format \'JPEG\', not \''+format+'\'');
+	}
+
+	var imageIndex
+	, images = this.internal.collections[namespace + 'images']
+	, coord = this.internal.getCoordinateString
+	, vcoord = this.internal.getVerticalCoordinateString
+
+	if (images){
+		// this is NOT the first time this method is ran on this instance of jsPDF object.
+		imageIndex = Object.keys ? 
+		Object.keys(images).length :
+		(function(o){
+			var i = 0
+			for (var e in o){if(o.hasOwnProperty(e)){ i++ }}
+			return i
+		})(images)
+	} else {
+		// this is the first time this method is ran on this instance of jsPDF object.
+		imageIndex = 0
+		this.internal.collections[namespace + 'images'] = images = {}
+		this.internal.events.subscribe('putResources', putResourcesCallback)
+		this.internal.events.subscribe('putXobjectDict', putXObjectsDictCallback)
+	}
+
+	var dims = [
+        w,
+        h
+    ];
+	var info = {
+		w: dims.w,
+		h: dims.h,
+		imageWidth: imageWidth,
+		imageHeight: imageHeight,
+		cs: 'DeviceRGB',
+		bpc: 8,
+		format: format,
+		f: 'DCTDecode',
+		i: imageIndex,
+		data: imageData,
+		fileSize: fileSize
+	};
+	images[imageIndex] = info
+	if (!w && !h) {
+		w = -96;
+		h = -96;
+	}
+	if (w < 0) {
+		w = (-1) * info['w'] * 72 / w / this.internal.scaleFactor;
+	}
+	if (h < 0) {
+		h = (-1) * info['h'] * 72 / h / this.internal.scaleFactor;
+	}
+	if (w === 0) {
+		w = h * info['w'] / info['h'];
+	}
+	if (h === 0) {
+		h = w * info['h'] / info['w'];
+	}
+
+	this.internal.write(
+		'q'
+		, coord(w)
+		, '0 0'
+		, coord(h) // TODO: check if this should be shifted by vcoord
+		, coord(x)
+		, vcoord(y + h)
+		, 'cm /I'+info['i']
+		, 'Do Q'
+	)
+
+	return this 
+}
+
+})(jsPDF.API)
+
+/** @preserve 
+jsPDF addImage plugin (JPEG only at this time)
+Copyright (c) 2012 https://github.com/siefkenj/
+*/
+
+/**
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * ====================================================================
+ */
+
+;(function(jsPDFAPI) {
+'use strict'
+
+    jsPDFAPI.save = function (file) {
+        'use strict'
+        
+        if(file.exists()){
+        	file.deleteFile();
+        }
+        var res = this.output();
+        var parts = res.split(/#image\s([^#]*)#/gim);
+        
+        var intNode = 0, intNodes = parts.length, imgFile;
+        for (intNode = 0; intNode < intNodes; intNode = intNode + 1) {
+            switch (intNode % 2 ? false : true) {
+            case true:
+                file.write(parts[intNode],true);
+                break;
+            case false:
+                imgFile = Ti.Filesystem.getFile(parts[intNode]);
+                if(imgFile.exists()){
+                	file.write(imgFile.read(),true);              	
+                }
+                break;  
+            }
+        }
+        return this
+    };
+    
+})(jsPDF.API);
+
+;(function(jsPDFAPI) {
+'use strict'
+
+    jsPDFAPI.test = function () {
+        'use strict'
+        
+        this.addPage();
+        return this
+    };
+    
+})(jsPDF.API);
+
+module.exports = jsPDF;  

@@ -24,14 +24,14 @@ Ti.Geolocation.preferredProvider = Ti.Geolocation.PROVIDER_GPS;
 // var webView;
 
 
-var _jsPDF = require('./jsPDFMod/TiJSPDF');
+var _jsPDF = require('tiPDF');
 var _isAndroid = Ti.Platform.osname === 'android';
 var _tempFile = null;
 
 // -----------------------------------------------------------------------------variable declaration
 
-
-
+var userLat,UserLong;
+var dateSelected;
 var Map = require('ti.map');
 var mainMapView;
 var witnessSource = [];
@@ -42,8 +42,7 @@ var viewArrayReal = [];
 
 ////----------------------------------------------------------------------------- dependency calling
 
-var anno2 = Map.createAnnotation({latitude: 18.97, pincolor: Map.ANNOTATION_BLUE, longitude: 72.82, title: "Drag Me 2", subtitle: "This is anno2", draggable: true});
-var anno3 = Map.createAnnotation({latitude: 18.97, longitude: 72.82, title: "anno3", subtitle: "This is anno3", draggable: true});
+var anno3;
 //----------------------------------------------------------------------------- function Body
 
 
@@ -51,14 +50,18 @@ var anno3 = Map.createAnnotation({latitude: 18.97, longitude: 72.82, title: "ann
 function goPrevious() {
 	if ($.witnessView.addingViewDisplayed == 1) {
 		$.witnessView.addingViewDisplayed = 0;
+		blurInput();
 		hideWitnessAddingScreen();
 		resetOtherDriver();
+		
 		return;
 	}
 	if ($.witnessViewReal.addingViewDisplayed == 1) {
 		$.witnessViewReal.addingViewDisplayed = 0;
+		blurInputReal();
 		hideWitnessAddingScreenReal();
 		resetWitness();
+		
 		return;
 	}
 	if ($.parentScrollableView.currentPageIndex == 0) {
@@ -96,7 +99,6 @@ $.parentScrollableView.addEventListener('scrollend', function(e) {
 			regionFit : true,
 			userLocation : true,
 			enableZoomControls : false,
-			annotations: [anno3],
 			width : "100%",
 			height : "100%",
 			top : '0',
@@ -106,6 +108,8 @@ $.parentScrollableView.addEventListener('scrollend', function(e) {
 		
 		mainMapView.addEventListener('pinchangedragstate', function(e) {
 			Ti.API.info(e.title + ": newState=" + e.newState + ", lat=" + e.annotation.latitude + ", lon=" + e.annotation.longitude);
+			userLat = e.annotation.latitude;
+			UserLong = e.annotation.longitude;
 		}); 
 
 		
@@ -120,6 +124,8 @@ $.parentScrollableView.addEventListener('scrollend', function(e) {
 					latitudeDelta : 0.01,
 					longitudeDelta : 0.01
 				};
+				userLat = e.coords.latitude;
+				UserLong = e.coords.longitude;
 				mainMapView.setLocation(region);
 			} catch(e) {
 				var region = {
@@ -129,9 +135,12 @@ $.parentScrollableView.addEventListener('scrollend', function(e) {
 					latitudeDelta : 0.01,
 					longitudeDelta : 0.01
 				};
+				userLat = 18.97;
+				UserLong = 72.82;
 				mainMapView.setLocation(region);
 				alert("User Location Not Found");
 			}
+			
 		});
 	}
 	else
@@ -147,9 +156,14 @@ $.parentScrollableView.addEventListener('scrollend', function(e) {
 		}
 	}
 	
+	if($.parentScrollableView.currentPageIndex == 6)
+	{
+		loadEnteredDate();
+	}
 	
 	if ($.parentScrollableView.currentPageIndex == 7) {
-		
+		alert("loading pdf");
+		/*
 		var doc = new _jsPDF();
         doc.setProperties({
             title: 'Title',
@@ -213,12 +227,14 @@ $.parentScrollableView.addEventListener('scrollend', function(e) {
                 width: Ti.UI.FILL
             });
             $.PDF_View_1.add(pdfview);
-		}
+		}*/
+		
+		generatePdfToShow();
 	}
 });
 
 
-function captureImageFromCamera() {
+function getImageFromCamera() {
 	Ti.Media.showCamera({
 		showControls : true,
 		mediaTypes : Ti.Media.MEDIA_TYPE_PHOTO,
@@ -230,12 +246,23 @@ function captureImageFromCamera() {
 				width : 320,
 				height : 480
 			});
-			switch($.imageSelection.selcectorTag)
-			{
-				case 0 : $.img1.image = imageView.image;$.imageSelection.selcectorTag = 1;break;
-				case 1 : $.img2.image = imageView.image;$.imageSelection.selcectorTag = 2;break;
-				case 2 : $.img3.image = imageView.image;$.imageSelection.selcectorTag = 3;break;
-				case 3 : $.img4.image = imageView.image;$.imageSelection.selcectorTag = 4;break;
+			switch($.imageSelection.selcectorTag) {
+			case 0 :
+				$.img1.image = imageView.image;
+				$.imageSelection.selcectorTag = 1;
+				break;
+			case 1 :
+				$.img2.image = imageView.image;
+				$.imageSelection.selcectorTag = 2;
+				break;
+			case 2 :
+				$.img3.image = imageView.image;
+				$.imageSelection.selcectorTag = 3;
+				break;
+			case 3 :
+				$.img4.image = imageView.image;
+				$.imageSelection.selcectorTag = 4;
+				break;
 			}
 		},
 		cancel : function() {
@@ -244,6 +271,26 @@ function captureImageFromCamera() {
 			Ti.API.error('Delfos Mobile', JSON.stringify(error));
 		}
 	});
+}
+
+function showOptionsToGetImages() {
+	
+	var initialDialog = Ti.UI.createAlertDialog({
+		cancel : 1,
+		buttonNames : ['Camera'/*, 'Album',*/],
+		message : 'Please Select The Source To Get Images ',
+		title : 'Select Source'
+	});
+	initialDialog.addEventListener('click', function(e) {
+		if (e.index === e.source.cancel) {
+			// Ti.API.info('The cancel button was clicked');
+			getPicFromGallery();
+		} else {
+			getImageFromCamera();
+		}
+
+	});
+	initialDialog.show(); 
 }
 
 function getPicFromGallery () {
@@ -347,7 +394,7 @@ function validateAndSave () {
 		return;
 	}
 	var blob = {
-		id : $.witnessNameTextField.id,
+		id : $.witnessNameTextField.value+$.witnessPhoneTextField.value+$.witnessEmailTextField.value+$.witnessLastNameTextField.value,
 		name : $.witnessNameTextField.value,
 		phone : $.witnessPhoneTextField.value,
 		emailId : $.witnessEmailTextField.value,
@@ -364,11 +411,9 @@ function validateAndSave () {
 			if(blob.id == $.witnessNameTextField.id)
 			{
 				temp.push(blob);
-				alert("replacing with name "+blob.name);
 			}
 			else
 			{
-				alert('no replacement');
 				temp.push(witnessSource[i]);
 			}
 		}
@@ -616,7 +661,7 @@ function blurInputReal() {
 	}
 }
 function animateToShowAddingScreenWitnessReal () {
-  $.witnessNameTextFieldReal.id = "";
+  	$.witnessNameTextFieldReal.id = "";
 	$.witnessViewReal.toEdit = 0;
 	var anim = Ti.UI.createAnimation();
 	anim.left = "0%";
@@ -624,6 +669,9 @@ function animateToShowAddingScreenWitnessReal () {
 	$.witnessDataReal.animate(anim);
 	anim = null;
 	$.witnessViewReal.addingViewDisplayed = 1;
+	$.witnessNameTextFieldReal.value = "";
+	$.witnessPhoneReal.value = "";
+	$.witnessEmailTextFieldReal.value = "";
 }
 function hideWitnessAddingScreenReal() {
 	var anim = Ti.UI.createAnimation();
@@ -650,7 +698,7 @@ function validateAndSaveWitnessReal () {
 		return;
 	} 
 	var blob = {
-		id : $.witnessNameTextFieldReal.id,
+		id : $.witnessNameTextFieldReal.value+$.witnessPhoneReal.value+$.witnessEmailTextFieldReal.value,
 		name : $.witnessNameTextFieldReal.value,
 		phone : $.witnessPhoneReal.value,
 		emailId : $.witnessEmailTextFieldReal.value,
@@ -826,6 +874,8 @@ function createCustomViewReal(blob, index) {
 		var temp = [];
 		for(i=0;i<witnessSourceReal.length;i++)
 		{
+			alert(witnessSourceReal[i].id);
+			alert(mainView.id);
 			if(witnessSourceReal[i].id == mainView.id)
 			{
 				
@@ -867,10 +917,385 @@ function generatePdf() {
 	setTimeout(function(e) {
 		
 	}, 3000); 
+}
+
+
+function getDatePicker() {
+	
+	var datepicker = Titanium.UI.createPicker({
+		type : Titanium.UI.PICKER_TYPE_DATE,
+		useSpinner : true,
+		value : new Date(),
+		font : {
+			fontSize : 25
+		},
+		left : 0,
+		top : "50%",
+		width : "65%",
+		height : "40%",
+		value : new Date()
+	});
+	var timepicker = Titanium.UI.createPicker({
+		type : Titanium.UI.PICKER_TYPE_TIME,
+		format24 : false,
+		useSpinner : true,
+		timeFormat : 'hh:mm z',
+		top : 10,
+		font : {
+			fontSize : '30dp'
+		},
+		top : '50%',
+		right : '0%',
+		width : '35%',
+		height : '40%'
+	});
+	
+	var datelabel = "";
+
+	// var cur_date_ref = new Date();
+	// var def = cur_date_ref.getUTCFullYear() + "-0" + cur_date_ref.getMonth() + '-' + cur_date_ref.getDate();
+	// def = def + "T"+cur_date_ref.getHours() + ":" + cur_date_ref.getMinutes() + ":00";
+	// alert(def);
+	// datepicker.value = def;
+	
+	// var timepicker = Titanium.UI.createPicker({
+		// type : Titanium.UI.PICKER_TYPE_TIME,
+		// format24 : false,
+		// useSpinner : true,
+		// timeFormat : 'hh:mm z',
+		// top : 10,
+		// font : {
+			// fontSize : 33
+		// },
+		// top : '-50%',
+		// left : '50%',
+		// width : '50%',
+		// height : '50%'
+	// });
+
+	var done = Titanium.UI.createButton({
+		backgroundColor : '#999966',
+		color : '#003366',
+		title : 'Done',
+		top : '40%',
+		right : '0%',
+		height : "10%",
+		width : '30%',
+	});
+	
+	
 
 	
+	done.addEventListener('click', function(e) {
+		$.dateSelectionLabel.tag = 0;
+		// var AmPm = "AM";
+		// var hours = datepicker.value.getHours();
+		// if(hours>=12){
+		// AmPm = "PM";
+		// if(hours != 12){
+		// hours = hours - 12;
+		// }
+		// }
+		// var min = datepicker.value.getMinutes();
+		// if(min<10)
+		// {
+		// min = "0" + min;
+		// if(min == 0)
+		// {
+		// min = "00";
+		// }
+		// }
+		// var time = hours + ":" + min + " " + AmPm;
+		// var dateSelected = datepicker.value.getDate() + "-" + (datepicker.value.getMonth() + 1) + "-" + datepicker.value.getFullYear();
+
+		if (timepicker.value.getHours() >= 12) {
+			if (timepicker.value.getMinutes() < 10) {
+				if (timepicker.value.getHours() == 12) {
+					datelabel = ('      ' + datepicker.value.getDate() + '/' + (datepicker.value.getMonth() + 1) + '/' + datepicker.value.getFullYear() + '    ' + 12 + ':0' + timepicker.value.getMinutes() + ' PM');
+				} else {
+					datelabel = ('      ' + datepicker.value.getDate() + '/' + (datepicker.value.getMonth() + 1) + '/' + datepicker.value.getFullYear() + '    ' + (timepicker.value.getHours() - 12) + ':0' + timepicker.value.getMinutes() + ' PM');
+				}
+			} else {
+				if (timepicker.value.getHours() == 12) {
+					datelabel = ('      ' + datepicker.value.getDate() + '/' + (datepicker.value.getMonth() + 1) + '/' + datepicker.value.getFullYear() + '    ' + 12 + ':' + timepicker.value.getMinutes() + ' PM');
+				} else {
+					datelabel = ('      ' + datepicker.value.getDate() + '/' + (datepicker.value.getMonth() + 1) + '/' + datepicker.value.getFullYear() + '    ' + (timepicker.value.getHours() - 12) + ':' + timepicker.value.getMinutes() + ' PM');
+				}
+			}
+		} else {
+			if (timepicker.value.getMinutes() < 10) {
+				datelabel = ('      ' + datepicker.value.getDate() + '/' + (datepicker.value.getMonth() + 1) + '/' + datepicker.value.getFullYear() + '    ' + timepicker.value.getHours() + ':0' + timepicker.value.getMinutes() + ' AM');
+			} else {
+				datelabel = ('      ' + datepicker.value.getDate() + '/' + (datepicker.value.getMonth() + 1) + '/' + datepicker.value.getFullYear() + '    ' + timepicker.value.getHours() + ':' + timepicker.value.getMinutes() + ' AM');
+			}
+		}
+		$.dateSelectionLabel.text = datelabel;
+		dateSelected = $.dateSelectionLabel.text;
+		datepicker.hide();
+		timepicker.hide();
+		done.hide();
+	}); 
+
+	
+	// datepicker.addEventListener('change',function(e){
+		// var AmPm = "AM";
+		// var hours = datepicker.value.getHours();
+		// if(hours>=12){
+			// AmPm = "PM";
+			// if(hours != 12){
+				// hours = hours - 12;
+			// }
+		// }
+		// var min = datepicker.value.getMinutes();
+		// if(min<10)
+		// {
+			// min = "0" + min;
+			// if(min == 0)
+			// {
+				// min = "00";
+			// }
+		// }
+		// var time = hours + ":" + min + " " + AmPm;
+		// var dateSelected = datepicker.value.getDate() + "-" + (datepicker.value.getMonth() + 1) + "-" + datepicker.value.getFullYear();
+		// dateSelected = dateSelected + " " + time;
+		// $.dateSelectionLabel.text = dateSelected;
+	// });
+	
+	if($.dateSelectionLabel.tag == 0){
+		$.dateSelectionLabel.tag = 1;
+		$.dateSelection.add(datepicker);
+		$.dateSelection.add(timepicker);
+		$.dateSelection.add(done);
+	}
+}
+
+function addAnnotationPin () {
+	if($.addPin.tag == 0)
+	{
+		$.addPin.tag = 1;
+	}
+	ann03 = Map.createAnnotation({latitude: userLat, longitude: UserLong, title: "anno3", subtitle: "This is anno3", draggable: true});
+  	var arr = [];
+  	arr.push(ann03);
+  	mainMapView.addAnnotation(ann03);
 }
 
 
 
+function loadEnteredDate() {
+	$.actualDate.text = $.dateSelectionLabel.text;
+	Titanium.Geolocation.reverseGeocoder(userLat, UserLong, function(e) {
+		// var arr = e.places[0].address.split(",");
+		 // $.actualLocation.text = arr[0] + "," + arr[1] + "," + arr[2] + "," + arr[3] + "," + arr[4];
+		 $.actualLocation.text = e.places[0].address;
+	});
+	
+	switch($.imageSelection.selcectorTag) {
+	case 1 :
+		$.resImg1.image = $.img1.image;
+		var img = $.resImg1.toImage();
+		var resizedImage = img.imageAsResized(160,120);
+		var compression_level = 0.75; 
+		var imageFactory = require('ti.imagefactory');
+		resizedImage = imageFactory.compress(resizedImage, compression_level);
+		var destFile = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, 'destination.jpg');
+		destFile.write(resizedImage);
+		
+		
+		// var blobObj = $.img1.toImage(); 
+ 		// var f = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img1x.jpg');
+ 		// f.write(blobObj);
+		break;
+	case 2 :
+		$.resImg1.image = $.img1.image;
+		blobObj = $.img1.toImage(); 
+ 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img1.jpg');
+ 		f.write(blobObj);
+ 		
+		$.resImg2.image = $.img2.image;
+		blobObj2 = $.img2.toImage(); 
+ 		var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img2.jpg');
+ 		f1.write(blobObj2);
+		break;
+	case 3 :
+		$.resImg1.image = $.img1.image;
+		blobObj = $.img1.toImage(); 
+ 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img1.jpg');
+ 		f.write(blobObj);
+ 		
+ 		$.resImg2.image = $.img2.image;
+		blobObj2 = $.img2.toImage(); 
+ 		var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img2.jpg');
+ 		f1.write(blobObj2);
+ 		
+ 		$.resImg2.image = $.img3.image;
+		blobObj3 = $.img3.toImage(); 
+ 		var f3 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img3.jpg');
+ 		f3.write(blobObj3);
+ 		
+		break;
+	case 4 :
+		$.resImg1.image = $.img1.image;
+		blobObj = $.img1.toImage(); 
+ 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img1.jpg');
+ 		f.write(blobObj);
+ 		
+ 		$.resImg2.image = $.img2.image;
+		blobObj2 = $.img2.toImage(); 
+ 		var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img2.jpg');
+ 		f1.write(blobObj2);
+ 		
+ 		$.resImg2.image = $.img3.image;
+		blobObj3 = $.img3.toImage(); 
+ 		var f3 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img3.jpg');
+ 		f3.write(blobObj3);
+ 		
+		$.resImg4.image = $.img4.image;
+		blobObj4 = $.img4.toImage(); 
+ 		var f4 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img4.jpg');
+ 		f4.write(blobObj4);
+		break;
+	}
+
+	
+	$.numberOfDrivers.text = witnessSource.length + " Drivers";
+	$.numberOfWitness.text = witnessSourceReal.length + " Witnesses";
+	
+	// generatePdfToShow();
+}
+
+
+function generatePdfToShow() {
+	var index=0;
+	var index_2=0;
+	var yposition;
+	var doc = new _jsPDF();
+	doc.setProperties({
+		title : 'Title',
+		subject : 'This is the subject',
+		author : 'Moin',
+		keywords : 'one, two, three',
+		creator : 'Moin'
+	});
+
+	// var imgSample1 = Ti.Filesystem.resourcesDirectory + 'image1.jpg';
+	// doc.addImage(imgSample1, 'JPEG', 10, 20, 128, 96);
+
+	doc.setFont("helvetica");
+	doc.setFontType("bold");
+	doc.setFontSize(15);
+	doc.text(5, 10, 'Date Selected');
+	doc.text(5, 20, $.actualDate.text.toString());
+	
+	doc.text(5,30,'Location');
+	doc.text(5,40,$.actualLocation.text.toString());
+	
+	yposition = 40;
+	
+	for(i=0;i<witnessSource.length;i++)
+	{
+		if(yposition+80<270)
+		{
+			
+		}
+		else
+		{
+			index = 0;
+			doc.addPage();
+		}
+		doc.text(5,(40+(70*index)+(10+10)),'Other Driver');
+		doc.text(5,(40+(70*index)+(20+10)),('Name : '+witnessSource[i].name.toString()));
+		doc.text(5,(40+(70*index)+(30+10)),('Phone : '+witnessSource[i].phone.toString()));
+		doc.text(5,(40+(70*index)+(40+10)),('Email : '+witnessSource[i].emailId.toString()));
+		doc.text(5,(40+(70*index)+(50+10)),('Car Registration : '+witnessSource[i].carRegistration));
+		doc.text(5,(40+(70*index)+(60+10)),('Description : '+witnessSource[i].description));
+		doc.text(5,(40+(70*index)+(70+10)),('Injury : '+witnessSource[i].injury));
+		yposition = (40+(70*index)+(70+10));
+		index++;
+	}
+	
+	for(i=0;i<witnessSourceReal.length;i++)
+	{
+		if(yposition+50<270)
+		{
+			
+		}
+		else
+		{
+			index_2 = 0;
+			doc.addPage();
+		}
+		doc.text(5,(yposition+(40*index_2)+(10+10)),'Witness');
+		doc.text(5,(yposition+(40*index_2)+(20+10)),('Name : '+witnessSourceReal[i].name.toString()));
+		doc.text(5,(yposition+(40*index_2)+(30+10)),('Phone : '+witnessSourceReal[i].phone.toString()));
+		doc.text(5,(yposition+(40*index_2)+(40+10)),('Email : '+witnessSourceReal[i].emailId.toString()));
+		yposition = (yposition+(40*index_2)+(40+10));
+		index_2 = 0;
+	}
+	
+	doc.addPage();
+	
+	var image=$.img1.toBlob();
+    // var str = Ti.Utils.base64encode(image);
+ 
+    // var image2=Ti.Utils.base64decode(str);
+    // alert(image2.toString());
+	// var imgSample2 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img1x.jpg');
+	var imgSample2 = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, 'destination.jpg');
+	// var imgSample2 = $.resImg1.image;
+	var imgView1 = {
+		width : 'auto',
+		heigth : 'auto',
+		image : imgSample2,
+	};
+	doc.addImage(imgSample2, 'JPEG', 10, 20, 128, 96, 160, 120, 120);	
+	
+	// doc.rect(20, 120, 10, 10);
+	// empty square
+	// doc.rect(40, 120, 10, 10, 'F');
+	// filled square
+
+	// var imgSample2 = Ti.Filesystem.resourcesDirectory + 'image2.jpg';
+	// doc.addImage(imgSample2, 'JPEG', 70, 10, 100, 120);
+
+	// doc.setFont("helvetica");
+	// doc.setFontType("normal");
+	// doc.setFontSize(24);
+	// doc.text(20, 180, 'This is what I looked like trying to get');
+	// doc.text(20, 190, 'the save function into the plugin system.');
+	// doc.text(20, 200, 'It works now so all of you who doubt me fuck you -- Moin ');
+// 
+	// doc.text(20, 240, (new Date()).toString());
+
+	// var timeStampName = new Date().getTime();
+	if (_tempFile != null) {
+		_tempFile.deleteFile();
+	}
+	_tempFile = Ti.Filesystem.getFile(Ti.Filesystem.getTempDirectory(), 'result.pdf');
+	doc.save(_tempFile);
+
+	if (_isAndroid) {
+		var intent = Ti.Android.createIntent({
+			action : Ti.Android.ACTION_VIEW,
+			type : "application/pdf",
+			data : _tempFile.nativePath
+		});
+
+		try {
+			Ti.Android.currentActivity.startActivity(intent);
+		} catch(e) {
+			Ti.API.debug(e);
+			alert('You have no apps on your device that can open PDFs. Please download one from the marketplace.');
+		}
+	} else {
+
+		var pdfview = Ti.UI.createWebView({
+			backgroundColor : '#eee',
+			url : _tempFile.nativePath,
+			height : Ti.UI.FILL,
+			width : Ti.UI.FILL
+		});
+		$.PDF_View_1.add(pdfview);
+	}
+}
 

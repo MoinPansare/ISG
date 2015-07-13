@@ -12,35 +12,87 @@
 
 ".tab":{
 	width : "20%",
-	height : 60
+	height : 60,
+	backgroundColor : 'black'
 }
 
 "#tab1":{
 	left : 0,
-	backgroundColor : 'red',
+	backgroundColor : 'transparent',
 	identifier : 'Home'
 }
 
 "#tab2":{
 	left : "20%",
-	backgroundColor : 'green',
+	backgroundColor : 'transparent',
 	identifier : 'CallWin'
 }
 
 "#tab3":{
 	left : "40%",
-	backgroundColor : 'blue',
+	backgroundColor : 'transparent',
 	identifier : 'IncidentWin'
 }
 
 "#tab4":{
 	left : "60%",
-	backgroundColor : 'yellow',
+	backgroundColor : 'transparent',
 	identifier : ''
 }
 
 "#tab5":{
 	right : 0,
-	backgroundColor : 'red',
+	backgroundColor : 'transparent',
 	identifier : ''
+}
+
+".tabimage":{
+	top : 5,
+	width : 30,
+	height : 30,
+	bubbleParent : true
+}
+
+".tabLabel":{
+	bottom : "5",
+	left : '0',
+	right : 0,
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	font : {
+		fontSize : 11
+	},
+	backgroundColor : 'transparent',
+	bubbleParent : true
+}
+
+"#tabImage1":{
+	image : "/images/created/home_hover.png"
+}
+"#tabImage2":{
+	image : "/images/created/call.png"
+}
+"#tabImage3":{
+	image : "/images/created/add_incident.png"
+}
+"#tabImage4":{
+	image : "/images/created/incident.png"
+}
+"#tabImage5":{
+	image : "/images/created/more.png"
+}
+
+"#tabLabel1":{
+	color : "white"
+}
+"#tabLabel1":{
+	color : "#949494"
+}
+"#tabLabel1":{
+	color : "#949494"
+}
+"#tabLabel1":{
+	color : "#949494"
+}
+"#tabLabel1":{
+	color : "#949494"
 }

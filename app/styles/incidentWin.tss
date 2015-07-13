@@ -160,7 +160,8 @@
 	},
 	prefilled : 0,
 	text : "Select a date",
-	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	tag : 0,
 }
 
 "#mapBackground":{
@@ -184,7 +185,9 @@
 		fontSize : 15
 	},
 	text : "Add Location Pin",
-	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	bubbleParent : false,
+	tag : 0
 }
 
 "#imageSelection":{

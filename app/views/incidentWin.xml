@@ -17,20 +17,20 @@
 			</View>
 			<View class="scrollableSubChilds" id="dateSelection">
 				<Label id="dateheaderlabel"></Label>
-				<Label id="dateSelectionLabel"></Label>
+				<Label id="dateSelectionLabel" onClick="getDatePicker"></Label>
 			</View>
 			<View class="scrollableSubChilds" id="mapViewParent">
 				<View id="mapBackground"></View>
-				<Label id="addPin"></Label>
+				<Label id="addPin" onClick="addAnnotationPin"></Label>
 			</View>
 			<View class="scrollableSubChilds" id="imageSelection">
 				<View id="imagesBackground">
-					<ImageView id="img1" onClick="getPicFromGallery"></ImageView>
-					<ImageView id="img2" onClick="getPicFromGallery"></ImageView>
-					<ImageView id="img3" onClick="getPicFromGallery"></ImageView>
-					<ImageView id="img4" onClick="getPicFromGallery"></ImageView>
+					<ImageView id="img1"></ImageView>
+					<ImageView id="img2"></ImageView>
+					<ImageView id="img3"></ImageView>
+					<ImageView id="img4"></ImageView>
 				</View>
-				<Label id="addImage" onClick="captureImageFromCamera"></Label>
+				<Label id="addImage" onClick="showOptionsToGetImages"></Label>
 				<View id="overlayBackground"></View>
 				<View id="overlayView">
 					<View id="horizontalView">

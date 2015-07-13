@@ -1,19 +1,24 @@
 <Alloy>
 	<View id="menu" backgroundColor="black">
 		<View class="tab" id="tab1" onClick="openWin1">
-			
+			<ImageView class="tabimage" id="tabImage1"></ImageView>
+			<Label class="tabLabel" id="tabLabel1">Home</Label>
 		</View>
 		<View class="tab" id="tab2" onClick="openWin2">
-			
+			<ImageView class="tabimage" id="tabImage2"></ImageView>
+			<Label class="tabLabel" id="tabLabel2">Call</Label>
 		</View>
 		<View class="tab" id="tab3" onClick="openWin3">
-			
+			<ImageView class="tabimage" id="tabImage3"></ImageView>
+			<Label class="tabLabel" id="tabLabel3">Add Incident</Label>
 		</View>
 		<View class="tab" id="tab4" onClick="openWin4">
-			
+			<ImageView class="tabimage" id="tabImage4"></ImageView>
+			<Label class="tabLabel" id="tabLabel4">Incident</Label>
 		</View>
 		<View class="tab" id="tab5" onClick="openWin5">
-			
+			<ImageView class="tabimage" id="tabImage5"></ImageView>
+			<Label class="tabLabel" id="tabLabel5">More</Label>
 		</View>
 	</View>
 </Alloy>
