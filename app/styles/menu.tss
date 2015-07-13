@@ -37,7 +37,7 @@
 "#tab4":{
 	left : "60%",
 	backgroundColor : 'transparent',
-	identifier : ''
+	identifier : 'Incidents'
 }
 
 "#tab5":{

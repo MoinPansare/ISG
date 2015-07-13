@@ -1,0 +1,130 @@
+<Alloy>
+	<Window class="container" id="incidents">
+		<View id="toolBar">
+			<Label id="title">Incidents</Label>
+			<ImageView id="backImage" onClick="goPrevious"></ImageView>
+			<Label id="nextButton" onClick="goNext"></Label>
+			<Label id="SendEmail"></Label>
+		</View>
+		<ScrollableView id="parentScrollableView">
+			<View class="scrollableSubChilds" id="incidentsListView">
+				<ScrollView id="infoScrollView">
+					<View id="listContainer"></View>
+				</ScrollView>
+			</View>
+			<View class="scrollableSubChilds" id="finalDisplay">
+				<ScrollView id="finalScrollView">
+					<View id="containerForResult">
+						<View class="ReseltCell" id="dateView">
+							<Label class="titleLabel">Date</Label>
+							<Label class="detailLabel" id="actualDate"></Label>
+						</View>
+						<View class="ReseltCell" id="locationView">
+							<Label class="titleLabel">Location</Label>
+							<Label class="detailLabel" id="actualLocation"></Label>
+						</View>
+						<View id="photosView">
+							<Label class="titleLabel">Photos</Label>
+							<View id="imageContainer">
+								<ImageView class="resultImages" id="resImg1"></ImageView>
+								<ImageView class="resultImages" id="resImg2"></ImageView>
+								<ImageView class="resultImages" id="resImg3"></ImageView>
+								<ImageView class="resultImages" id="resImg4"></ImageView>
+							</View>
+						</View>
+						<View class="ReseltCell" id="otherDriversResultView" onClick="showOtherDriverScreen">
+							<Label class="titleLabel">Other Drivers</Label>
+							<Label class="detailLabel" id="numberOfDrivers">2 Drivers</Label>
+						</View>
+						<View class="ReseltCell" id="witnessResultView">
+							<Label class="titleLabel">Witnesses</Label>
+							<Label class="detailLabel" id="numberOfWitness">4 Witnesses</Label>
+						</View>
+					</View>
+				</ScrollView>
+			</View>
+			<View class="scrollableSubChilds" id="driverWitnessView">
+				<ScrollableView id="driverWitnessScrollableView">
+					<View id="driverView">
+						<ScrollView id="ListCollectionScroller"></ScrollView>
+						<Label id="addWitnessPin" onClick="animateToShowAddingScreen"></Label>
+						<View id="witnessData">
+							<ScrollView id="scrollViewToAddWitness">
+								<TextField class="detailsTextField" id="witnessNameTextField">
+									<KeyboardToolbar platform="ios">
+										<Toolbar>
+											<Items>
+												<Button class ="clearButton" onClick="clear1"></Button>
+												<Button class="flexi"></Button>
+												<Button class ="hidebutton" onClick="blurInput"></Button>
+											</Items>
+										</Toolbar>
+									</KeyboardToolbar>
+								</TextField>
+								<TextField class="detailsTextField" id="witnessLastNameTextField">
+									<KeyboardToolbar platform="ios">
+										<Toolbar>
+											<Items>
+												<Button class ="clearButton" onClick="clear4"></Button>
+												<Button class="flexi"></Button>
+												<Button class ="hidebutton" onClick="blurInput"></Button>
+											</Items>
+										</Toolbar>
+									</KeyboardToolbar>
+								</TextField>
+								<TextField class="detailsTextField" id="witnessEmailTextField">
+									<KeyboardToolbar platform="ios">
+										<Toolbar>
+											<Items>
+												<Button class ="clearButton" onClick="clear3"></Button>
+												<Button class="flexi"></Button>
+												<Button class ="hidebutton" onClick="blurInput"></Button>
+											</Items>
+										</Toolbar>
+									</KeyboardToolbar>
+								</TextField>
+								<TextField class="detailsTextField" id="witnessPhoneTextField">
+									<KeyboardToolbar platform="ios">
+										<Toolbar>
+											<Items>
+												<Button class ="clearButton" onClick="clear2"></Button>
+												<Button class="flexi"></Button>
+												<Button class ="hidebutton" onClick="blurInput"></Button>
+											</Items>
+										</Toolbar>
+									</KeyboardToolbar>
+								</TextField>
+								<Label id="descriptionLabel">Description</Label>
+								<TextArea id="witnessDescriptionTextArea">
+									<KeyboardToolbar platform="ios">
+										<Toolbar>
+											<Items>
+												<Button class ="clearButton" onClick="clear5"></Button>
+												<Button class="flexi"></Button>
+												<Button class ="hidebutton" onClick="blurInput"></Button>
+											</Items>
+										</Toolbar>
+									</KeyboardToolbar>
+								</TextArea>
+								<Label id="injuriesLabel">Injuries</Label>
+								<TextArea id="injuriesTextArea">
+									<KeyboardToolbar platform="ios">
+										<Toolbar>
+											<Items>
+												<Button class ="clearButton" onClick="clear6"></Button>
+												<Button class="flexi"></Button>
+												<Button class ="hidebutton" onClick="blurInput"></Button>
+											</Items>
+										</Toolbar>
+									</KeyboardToolbar>
+								</TextArea>
+								<Label id="saveLabel" onClick="validateAndSave"></Label>
+							</ScrollView>
+						</View>
+					</View>
+				</ScrollableView>
+			</View>
+		</ScrollableView>
+		<Require type="view" src="menu" id="menu"></Require>
+	</Window>
+</Alloy>

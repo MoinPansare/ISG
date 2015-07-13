@@ -78,7 +78,8 @@ function goPrevious() {
 
 
 function goNext() {
-	if ($.parentScrollableView.currentPageIndex == 7) {
+	if ($.parentScrollableView.currentPageIndex == 6) {
+		saveDataToDB();
 		return;
 	} else {
 		$.parentScrollableView.moveNext();
@@ -277,7 +278,7 @@ function showOptionsToGetImages() {
 	
 	var initialDialog = Ti.UI.createAlertDialog({
 		cancel : 1,
-		buttonNames : ['Camera'/*, 'Album',*/],
+		buttonNames : ['Camera', 'Album',],
 		message : 'Please Select The Source To Get Images ',
 		title : 'Select Source'
 	});
@@ -725,6 +726,7 @@ function validateAndSaveWitnessReal () {
 	else
 	{
 		witnessSourceReal.push(blob);
+		
 	}
 	
 	$.witnessNameTextFieldReal.id = "";
@@ -1145,7 +1147,7 @@ function loadEnteredDate() {
  		var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img2.jpg');
  		f1.write(blobObj2);
  		
- 		$.resImg2.image = $.img3.image;
+ 		$.resImg3.image = $.img3.image;
 		blobObj3 = $.img3.toImage(); 
  		var f3 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img3.jpg');
  		f3.write(blobObj3);
@@ -1298,4 +1300,79 @@ function generatePdfToShow() {
 		$.PDF_View_1.add(pdfview);
 	}
 }
+
+
+
+function saveDataToDB() {
+	var db = require('databaseinteractions');
+	var imgView1 = Ti.UI.createImageView({
+		image : $.resImg1.image,
+		width : 'auto',
+		height : 'auto'
+	});
+	var imgBlob1 = imgView1.toBlob();
+
+	var imgView2 = Ti.UI.createImageView({
+		image : $.resImg2.image,
+		width : 'auto',
+		height : 'auto'
+	});
+	var imgBlob2 = imgView2.toBlob();
+
+	var imgView3 = Ti.UI.createImageView({
+		image : $.resImg3.image,
+		width : 'auto',
+		height : 'auto'
+	});
+	var imgBlob3 = imgView3.toBlob();
+
+	var imgView4 = Ti.UI.createImageView({
+		image : $.resImg4.image,
+		width : 'auto',
+		height : 'auto'
+	});
+	var imgBlob4 = imgView4.toBlob();
+
+	var blobIncident = {
+		time : dateSelected,
+		location : $.actualLocation.text,
+		img1 : imgBlob1,
+		img2 : imgBlob2,
+		img3 : imgBlob3,
+		img4 : imgBlob4,
+		imgSelectorTag : $.imageSelection.selcectorTag
+	};
+
+	var otherDriverArr = [];
+	for ( i = 0; i < witnessSource.length; i++) {
+		var blob = {
+			id : witnessSource[i].id,
+			name : witnessSource[i].name,
+			phone : witnessSource[i].phone,
+			emailId : witnessSource[i].emailId,
+			carRegistration : witnessSource[i].carRegistration,
+			description : witnessSource[i].description,
+			injury : witnessSource[i].injury,
+		};
+		otherDriverArr.push(blob);
+	}
+
+	var witnessArr = [];
+	for ( i = 0; i < witnessSourceReal.length; i++) {
+		var blob = {
+			id : witnessSourceReal[i].id,
+			name : witnessSourceReal[i].name,
+			phone : witnessSourceReal[i].phone,
+			emailId : witnessSourceReal[i].emailId,
+		};
+		witnessArr.push(blob);
+	}
+	
+	db.database.AddIncident(blobIncident);
+	db.database.addOtherDriver(otherDriverArr,dateSelected);
+	db.database.addWitnesses(witnessArr,dateSelected);
+	
+	alert("all success now fetch");
+}
+
 
