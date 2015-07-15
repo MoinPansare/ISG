@@ -16,67 +16,66 @@
 }
 
 "#backImage":{
-	left : "5%",
-	width : "10%",
-	height : 35,
-	backgroundColor : 'red'
+	left : "3%",
+	width : "18%",
+	height : 40,
+	image : "/images/toolbarImages/back.png"
+	// backgroundColor : 'red'
 }
 
 "#restartButton":{
-	left : "40%",
-	width : "15%",
-	height : 35,
+	left : "60%",
+	width : "18%",
+	height : 40,
 	font : {
 		fontSize : 13
 	},
-	text : 'Restart',
-	backgroundColor : 'red',
+	// text : 'Restart',
+	// backgroundColor : 'red',
+	backgroundImage : "/images/toolbarImages/restart.png",
 	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
 }
 
 "#editORdone":{
 	left : "60%",
-	width : "15%",
-	height : 35,
+	width : "18%",
+	height : 40,
 	font : {
 		fontSize : 13
 	},
-	text : 'Done',
-	backgroundColor : 'red',
+	opacity : 0.0,
+	// text : 'Done',
+	// backgroundColor : 'red',
+	backgroundImage : "/images/toolbarImages/edit.png",
 	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
 }
 
 "#nextButton":{
 	left : "80%",
-	width : "15%",
-	height : 35,
-	font : {
-		fontSize : 13
-	},
-	text : 'Next',
-	backgroundColor : 'red',
-	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+	width : "18%",
+	height : 40,
+	backgroundImage : "/images/toolbarImages/next.png",
 }
 
 "#SendEmail":{
-	left : "100%",
-	width : "15%",
-	height : 35,
-	font : {
-		fontSize : 13
-	},
-	text : 'Done',
-	backgroundColor : 'Send Email',
-	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+	right : "-50%",
+	width : "24%",
+	height : 40,
+	backgroundImage : "/images/toolbarImages/send_email.png",
 }
 
 "#statusPointer":{
-	top: 60,
-	left: 0,
-	width: "100%",
-	height: 60,
-	backgroundColor : '#E72117'
+	top: 56,
+	left: -4,
+	width: "146%",
+	height: 67,
+	// backgroundColor : '#E72117'
+	backgroundImage : "/images/headers/top1.png",
+	tag : 1,
+	animaleLeft : 0,
+	animaleRight : 0,
 }
+
 
 "#parentScrollableView":{
 	top : 120,
@@ -120,7 +119,8 @@
 		fontWeight : 'bold'
 	},
 	height : 'auto',
-	text : "This section will help you record and send incident report to ISG"
+	text : "This section will help you record and send incident report to ISG",
+	color : 'black',
 }
 
 "#bodyLabel":{
@@ -131,6 +131,7 @@
 	font: {
 		fontSize: 15,
 	},
+	color : 'black',
 	height : 'auto',
 	text : "Press 'Next' on top right-hand column to procede onto various senctions \n\n Press 'Next' on top right-hand column to procede onto various senctions \n\n Press 'Next' on top right-hand column to procede onto various senctions \n\n Press 'Next' on top right-hand column to procede onto various senctions" 
 }

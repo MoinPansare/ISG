@@ -1,4 +1,3 @@
-
 Alloy.Globals.currentWindow = "Incidents";
 var obj = {
 	name : "Incidents",
@@ -17,35 +16,79 @@ var incidentsArr = [];
 var witnessArr = [];
 var otherDriverArr = [];
 var viewArr = [];
-var ViewArrReal = [];
-
-
-
-
+var viewArrayReal = [];
+var showAddingScreen;
+var userLat,
+    userLong;
+var anno3;
+var Map = require('ti.map');
+var mainMapView;
+var mapShown = 0;
 //---------------------------------------------------------------------initial Loading
 
 loadList();
 
-
-
-
-
-
-
-
-
-
-
-
 // -------------------------------------------------------------------------function body
 
-
 function goPrevious() {
-	if ($.parentScrollableView.currentPageIndex == 0) {
+	if ($.parentScrollableView1.currentPageIndex == 0) {
 		return;
 	}
-	if($.parentScrollableView.currentPageIndex == 2 && $.driverView.addingViewDisplayed == 1)
+	
+	if(Alloy.Globals.userLocationChanged == 1)
 	{
+		Alloy.Globals.userLocationChanged = 0;
+		// update location in both pages
+		
+		Titanium.Geolocation.reverseGeocoder(userLat, userLong, function(e) {
+			try {
+				$.actualLocation.text = e.places[0].address;
+				var db = require('databaseinteractions');
+				db.database.updateIncident($.actualLocation.text,userLat,userLong,$.actualDate.text);
+				getDetailViewFor($.actualDate.text);
+			} catch(e) {
+				alert("There was a problen in getting your location\nPlease Try Again");
+				var db = require('databaseinteractions');
+				db.database.updateIncident("Location Not Found",userLat,userLong,$.actualDate.text);
+				getDetailViewFor($.actualDate.text);
+			}
+		}); 
+	}
+
+	if (mapShown == 1) {
+		mapShown = 0;
+		var anim = Ti.UI.createAnimation();
+		anim.left = "100%";
+		anim.duartion = 400;
+		$.mapBackground.animate(anim);
+		if ($.mapBackground && $.mapBackground.children != undefined) {
+			var removeData = [];
+			for ( i = $.mapBackground.children.length; i > 0; i--) {
+				removeData.push($.mapBackground.children[i - 1]);
+			};
+			for ( i = 0; i < removeData.length; i++) {
+				$.mapBackground.remove(removeData[i]);
+			}
+			removeData = null;
+		};
+		return;
+	}
+	if ($.witnessViewReal.addingViewDisplayed12 == 1) {
+		blurInputReal();
+		resetWitness();
+		$.witnessViewReal.addingViewDisplayed12 = 0;
+		$.witnessViewReal.toEdit = 0;
+		var anim = Ti.UI.createAnimation();
+		anim.left = "100%";
+		anim.duration = 300;
+		$.witnessDataReal.animate(anim);
+		showAddingScreen = 0;
+		$.witnessViewReal.toEdit = 0;
+		anim = null;
+		return;
+	}
+
+	if ($.driverView.addingViewDisplayed == 1) {
 		blurInput();
 		resetOtherDriver();
 		$.driverView.addingViewDisplayed = 0;
@@ -53,35 +96,70 @@ function goPrevious() {
 		anim.left = "100%";
 		anim.duration = 300;
 		$.witnessData.animate(anim);
-		anim = null; 
+		$.witnessData.toEdit = 0;
+		anim = null;
 		return;
 	}
-	$.parentScrollableView.movePrevious();
+
+	if (Alloy.Globals.chnageInOtherDriver == 1) {
+		Alloy.Globals.chnageInOtherDriver = 0;
+		var db = require('databaseinteractions');
+		db.database.addOtherDriver(otherDriverArr, $.actualDate.text);
+		getDetailViewFor($.actualDate.text);
+
+		return;
+	}
+
+	if (Alloy.Globals.changeInWitness == 1) {
+		Alloy.Globals.changeInWitness = 0;
+		var db = require('databaseinteractions');
+		db.database.addWitnesses(witnessArr, $.actualDate.text);
+		getDetailViewFor($.actualDate.text);
+		return;
+	}
+	$.parentScrollableView1.movePrevious();
 }
 
 function goNext() {
-	if ($.parentScrollableView.currentPageIndex == 1) {
+	if ($.parentScrollableView1.currentPageIndex == 1) {
 		return;
 	}
-	$.parentScrollableView.moveNext();
+	$.parentScrollableView1.moveNext();
 }
 
-$.parentScrollableView.addEventListener('scrollend', function(e) {
-	$.parentScrollableView.currentPageIndex = e.currentPage;
+$.parentScrollableView1.addEventListener('scrollend', function(e) {
+	$.parentScrollableView1.currentPageIndex = e.currentPage;
+});
 
-}); 
+$.driverWitnessScrollableView.addEventListener('scrollend', function(e) {
+	$.driverWitnessScrollableView.currentPageIndex = e.currentPage;
+});
 
 function loadList() {
+	
+	
+	if ($.listContainer && $.listContainer.children != undefined) {
+		var removeData = [];
+		for ( i = $.listContainer.children.length; i > 0; i--) {
+			removeData.push($.listContainer.children[i - 1]);
+		};
+		for ( i = 0; i < removeData.length; i++) {
+			$.listContainer.remove(removeData[i]);
+		}
+		removeData = null;
+	};
+	
+	
 	var db = require('databaseinteractions');
 	incidentsArr = db.database.getIncidents();
 	// for(i=0;i<incidentsArr.length;i++)
 	// {
-		// $.listContainer.add(getViewFor(incidentsArr[i],i));
+	// $.listContainer.add(getViewFor(incidentsArr[i],i));
 	// }
-		for(i=0;i<20;i++)
-	{
-		$.listContainer.add(getViewFor(incidentsArr[0],i));
+	for ( i = 0; i < incidentsArr.length; i++) {
+		$.listContainer.add(getViewFor(incidentsArr[i], i));
 	}
+	loadOtherDriversList();
 }
 
 function getViewFor(blob, index) {
@@ -130,15 +208,18 @@ function getViewFor(blob, index) {
 		image : "/images/logo/detail.png",
 		bubbleParent : true,
 	});
-	
-	mainView.addEventListener('click', function(e) {		
-		getDetailViewFor(mainView.id);
-		$.parentScrollableView.moveNext();
-	}); 
 
-	mainView.addEventListener('swipe',function(e){
-		if(e.direction == 'right')
-		{
+	mainView.addEventListener('click', function(e) {
+		witnessArr = [];
+		otherDriverArr = [];
+		userLat = parseFloat(blob.lat);
+		userLong = parseFloat(blob.lon);
+		getDetailViewFor(mainView.id);
+		$.parentScrollableView1.moveNext();
+	});
+
+	mainView.addEventListener('swipe', function(e) {
+		if (e.direction == 'right') {
 			deleteButton.opacity = 1.0;
 			deleteButton.touchEnabled = true;
 			var anim = Ti.UI.createAnimation();
@@ -146,7 +227,7 @@ function getViewFor(blob, index) {
 			anim.left = 70;
 			anim.right = -50;
 			mainView.animate(anim);
-			anim.addEventListener('complete',function(e){
+			anim.addEventListener('complete', function(e) {
 				var animComplete = Ti.UI.createAnimation();
 				animComplete.duration = 300;
 				animComplete.left = 60;
@@ -154,10 +235,8 @@ function getViewFor(blob, index) {
 				mainView.animate(animComplete);
 				animComplete = null;
 			});
-		}else
-		{
-			if(e.direction = 'left')
-			{
+		} else {
+			if (e.direction = 'left') {
 				deleteButton.opacity = 0.0;
 				deleteButton.touchEnabled = false;
 				var anim = Ti.UI.createAnimation();
@@ -170,32 +249,32 @@ function getViewFor(blob, index) {
 		}
 	});
 
-	deleteButton.addEventListener('click',function(e){
-		/*if(deleteButton.touchEnabled == false)
-		{
+	
+	deleteButton.addEventListener('click', function(e) {
+		// alert(mainView.id);
+		if (deleteButton.touchEnabled == false) {
 			return;
 		}
 		// witnessSource
 		var temp = [];
-		for(i=0;i<witnessSourceReal.length;i++)
-		{
-			alert(witnessSourceReal[i].id);
-			alert(mainView.id);
-			if(witnessSourceReal[i].id == mainView.id)
-			{
-				
-			}
-			else
-			{
-				temp.push(witnessSourceReal[i]);
+		for ( i = 0; i < incidentsArr.length; i++) {
+			if (incidentsArr[i].time == mainView.id) {
+
+			} else {
+				temp.push(incidentsArr[i]);
 			}
 		}
-		witnessSourceReal = [];
-		witnessSourceReal = temp;
-		createWitnessViewReal();
-		*/
-	});
-	
+		incidentsArr = [];
+		incidentsArr = temp;
+		var db = require('databaseinteractions');
+		db.database.deleteIncident(mainView.id);
+		db.database.deleteDriversForIncident(mainView.id);
+		db.database.deleteWitnessForIncident(mainView.id);
+		loadList();
+
+	}); 
+
+
 	mainView.add(NameHeading);
 	mainView.add(detailView);
 	containerView.add(deleteButton);
@@ -203,53 +282,68 @@ function getViewFor(blob, index) {
 	return containerView;
 }
 
-
 function getDetailViewFor(id) {
-	
+
+	$.resImg1.image = "/images/dummy/placeholder.png";
+	$.resImg2.image = "/images/dummy/placeholder.png";
+	$.resImg3.image = "/images/dummy/placeholder.png";
+	$.resImg4.image = "/images/dummy/placeholder.png";
+
 	var selectedDetails;
 	var db = require('databaseinteractions');
 	otherDriverArr = db.database.getOtherDriversFor(id);
 	witnessArr = db.database.getWitnessesFor(id);
-	
-	for(i=0;i<incidentsArr.length;i++)
-	{
-		if(incidentsArr[i].time == id)
-		{
+
+	for ( i = 0; i < incidentsArr.length; i++) {
+		if (incidentsArr[i].time == id) {
 			selectedDetails = incidentsArr[i];
 		}
 	}
-	
+
 	$.actualDate.text = id;
 	$.actualLocation.text = selectedDetails.location;
-	
-	switch(parseInt(selectedDetails.selectionTag))
-	{
-		case 1 : $.resImg1.image = selectedDetails.img1;break;
-		case 2 : $.resImg1.image = selectedDetails.img1;
-			$.resImg2.image = selectedDetails.img2;
-			break;
-		case 3 : $.resImg1.image = selectedDetails.img1;
-			$.resImg2.image = selectedDetails.img2;
-			$.resImg3.image = selectedDetails.img3;
-			break;
-		case 4 : $.resImg1.image = selectedDetails.img1;
-			$.resImg2.image = selectedDetails.img2;
-			$.resImg3.image = selectedDetails.img3;
-			$.resImg4.image = selectedDetails.img4;
-			break;
+
+	switch(parseInt(selectedDetails.selectionTag)) {
+	case 1 :
+		$.resImg1.image = selectedDetails.img1;
+		break;
+	case 2 :
+		$.resImg1.image = selectedDetails.img1;
+		$.resImg2.image = selectedDetails.img2;
+		break;
+	case 3 :
+		$.resImg1.image = selectedDetails.img1;
+		$.resImg2.image = selectedDetails.img2;
+		$.resImg3.image = selectedDetails.img3;
+		break;
+	case 4 :
+		$.resImg1.image = selectedDetails.img1;
+		$.resImg2.image = selectedDetails.img2;
+		$.resImg3.image = selectedDetails.img3;
+		$.resImg4.image = selectedDetails.img4;
+		break;
 	}
-	
+
 	$.numberOfDrivers.text = otherDriverArr.length + " Drivers";
 	$.numberOfWitness.text = witnessArr.length + " Witnesses";
 }
 
-
 function showOtherDriverScreen() {
+	if ($.driverWitnessScrollableView.currentPageIndex == 1) {
+		$.driverWitnessScrollableView.movePrevious();
+	}
+	showingWhichScreen = 1;
 	loadOtherDriversList();
-	$.driverWitnessScrollableView.movePrevious();
-	$.parentScrollableView.moveNext();
+	// $.driverWitnessScrollableView.movePrevious();
+	$.parentScrollableView1.moveNext();
 }
 
+function showWitnessScreen() {
+	showingWhichScreen = 2;
+	createWitnessViewReal();
+	$.driverWitnessScrollableView.moveNext();
+	$.parentScrollableView1.moveNext();
+}
 
 function animateToShowAddingScreen() {
 	$.driverView.addingViewDisplayed = 1;
@@ -260,28 +354,28 @@ function animateToShowAddingScreen() {
 	anim = null;
 }
 
-function clear1 () {
-  $.witnessNameTextField.value = "";
+function clear1() {
+	$.witnessNameTextField.value = "";
 }
 
-function clear2 () {
-  $.witnessPhoneTextField.value = "";
+function clear2() {
+	$.witnessPhoneTextField.value = "";
 }
 
-function clear3 () {
-  $.witnessEmailTextField.value = "";
+function clear3() {
+	$.witnessEmailTextField.value = "";
 }
 
-function clear4 () {
-  $.witnessLastNameTextField.value = "";
+function clear4() {
+	$.witnessLastNameTextField.value = "";
 }
 
-function clear5 () {
-  $.witnessDescriptionTextArea.value = "";
+function clear5() {
+	$.witnessDescriptionTextArea.value = "";
 }
 
-function clear6 () {
-  $.injuriesTextArea.value = "";
+function clear6() {
+	$.injuriesTextArea.value = "";
 }
 
 function blurInput() {
@@ -297,7 +391,6 @@ function blurInput() {
 	}
 }
 
-
 function loadOtherDriversList() {
 	if ($.ListCollectionScroller && $.ListCollectionScroller.children != undefined) {
 		var removeData = [];
@@ -309,7 +402,7 @@ function loadOtherDriversList() {
 		}
 		removeData = null;
 	};
-	
+
 	viewArray = [];
 	for ( i = 0; i < otherDriverArr.length; i++) {
 		viewArray.push(createCustomView(otherDriverArr[i], i));
@@ -320,6 +413,13 @@ function loadOtherDriversList() {
 }
 
 function createCustomView(blob, index) {
+	var identifier;
+	setTimeout(function(e) {
+		identifier = blob.name + blob.phone + blob.emailId + blob.carRegistration;
+		blob.id = identifier;
+	}, 0);
+	// alert(blob.name);
+
 	var calculatedTop = (index * 80) + 80;
 	var containerView = Ti.UI.createView({
 		top : calculatedTop,
@@ -376,9 +476,9 @@ function createCustomView(blob, index) {
 		image : "/images/logo/detail.png",
 		bubbleParent : true,
 	});
-	
+
 	mainView.addEventListener('click', function(e) {
-		$.witnessNameTextField.id = blob.id;
+		$.witnessNameTextField.id = blob.name + blob.phone + blob.emailId + blob.carRegistration;
 		$.witnessNameTextField.value = blob.name;
 		$.witnessPhoneTextField.value = blob.phone;
 		$.witnessEmailTextField.value = blob.emailId;
@@ -390,13 +490,12 @@ function createCustomView(blob, index) {
 		anim.duration = 300;
 		$.witnessData.animate(anim);
 		anim = null;
-		$.driverView.toEdit = 1;
+		$.witnessData.toEdit = 1;
 		$.driverView.addingViewDisplayed = 1;
-	}); 
+	});
 
-	mainView.addEventListener('swipe',function(e){
-		if(e.direction == 'right')
-		{
+	mainView.addEventListener('swipe', function(e) {
+		if (e.direction == 'right') {
 			deleteButton.opacity = 1.0;
 			deleteButton.touchEnabled = true;
 			var anim = Ti.UI.createAnimation();
@@ -404,7 +503,7 @@ function createCustomView(blob, index) {
 			anim.left = 70;
 			anim.right = -50;
 			mainView.animate(anim);
-			anim.addEventListener('complete',function(e){
+			anim.addEventListener('complete', function(e) {
 				var animComplete = Ti.UI.createAnimation();
 				animComplete.duration = 300;
 				animComplete.left = 60;
@@ -412,10 +511,8 @@ function createCustomView(blob, index) {
 				mainView.animate(animComplete);
 				animComplete = null;
 			});
-		}else
-		{
-			if(e.direction = 'left')
-			{
+		} else {
+			if (e.direction = 'left') {
 				deleteButton.opacity = 0.0;
 				deleteButton.touchEnabled = false;
 				var anim = Ti.UI.createAnimation();
@@ -428,28 +525,26 @@ function createCustomView(blob, index) {
 		}
 	});
 
-	deleteButton.addEventListener('click',function(e){
-		/*if(deleteButton.touchEnabled == false)
-		{
+	deleteButton.addEventListener('click', function(e) {
+		//otherDriverArr
+		// alert(mainView.id);
+		if (deleteButton.touchEnabled == false) {
 			return;
 		}
 		// witnessSource
 		var temp = [];
-		for(i=0;i<witnessSource.length;i++)
-		{
-			if(witnessSource[i].id == mainView.id)
-			{
-				
-			}
-			else
-			{
-				temp.push(witnessSource[i]);
+		for ( i = 0; i < otherDriverArr.length; i++) {
+			if (otherDriverArr[i].id == mainView.id) {
+
+			} else {
+				temp.push(otherDriverArr[i]);
 			}
 		}
-		witnessSource = temp;
-		createWitnessView();*/
+		otherDriverArr = temp;
+		loadOtherDriversList();
+		Alloy.Globals.chnageInOtherDriver = 1;
 	});
-	
+
 	mainView.add(NameHeading);
 	mainView.add(nameLabel);
 	mainView.add(detailView);
@@ -468,10 +563,404 @@ function resetOtherDriver() {
 	$.injuriesTextArea.value = "";
 }
 
-function validateAndSave () {
-  
+function validateAndSave() {
+	var name = $.witnessNameTextField.value;
+	name.replace(' ', '');
+	if (name.length == 0) {
+		alert("Please enter a Name");
+		return;
+	}
+	if (parseFloat($.witnessPhoneTextField.value) == 'NaN' || $.witnessPhoneTextField.value.length != 10) {
+		alert("Phone Number is Invalid");
+		return;
+	}
+	if (!$.witnessEmailTextField.value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
+		alert("Email Id is Invalid");
+		return;
+	}
+	if ($.witnessLastNameTextField.value.length == 0) {
+		alert("Please Enter Car Registration");
+		return;
+	}
+	var blob = {
+		id : $.witnessNameTextField.id,
+		name : $.witnessNameTextField.value,
+		phone : $.witnessPhoneTextField.value,
+		emailId : $.witnessEmailTextField.value,
+		carRegistration : $.witnessLastNameTextField.value,
+		description : $.witnessDescriptionTextArea.value,
+		injury : $.injuriesTextArea.value
+	};
+	if ($.witnessData.toEdit == 1) {
+		var temp = [];
+		for ( i = 0; i < otherDriverArr.length; i++) {
+			if (otherDriverArr[i].id == $.witnessNameTextField.id) {
+				Alloy.Globals.chnageInOtherDriver = 1;
+				temp.push(blob);
+			} else {
+				temp.push(otherDriverArr[i]);
+			}
+		}
+		otherDriverArr = [];
+		otherDriverArr = temp;
+		temp = [];
+	} else {
+		Alloy.Globals.chnageInOtherDriver = 1;
+		otherDriverArr.push(blob);
+	}
+	$.witnessNameTextField.id = "";
+	$.witnessNameTextField.value = "";
+	$.witnessPhoneTextField.value = "";
+	$.witnessEmailTextField.value = "";
+	$.witnessLastNameTextField.value = "";
+	$.witnessDescriptionTextArea.value = "";
+	$.injuriesTextArea.value = "";
+	$.witnessData.toEdit = 0;
+
+	loadOtherDriversList();
+	hideWitnessAddingScreen();
+
 }
 
+function hideWitnessAddingScreen() {
+	var anim = Ti.UI.createAnimation();
+	anim.duration = 400;
+	anim.left = "100%";
+	$.witnessData.animate(anim);
+	anim = null;
+	$.driverView.addingViewDisplayed = 0;
+}
 
+//-----------------------------------------------------------------Witness View Real
 
+function animateToShowAddingScreenWitnessReal() {
+
+	setTimeout(function(e) {
+		$.witnessViewReal.addingViewDisplayed12 = 1;
+	}, 0);
+	$.witnessViewReal.toEdit = 0;
+	resetWitness();
+	$.witnessNameTextFieldReal.id = "";
+	$.witnessViewReal.toEdit = 0;
+	var anim = Ti.UI.createAnimation();
+	anim.left = "0%";
+	anim.duration = 300;
+	$.witnessDataReal.animate(anim);
+	showAddingScreen = 1;
+	anim = null;
+	showAddingScreen = 1;
+	$.witnessNameTextFieldReal.value = "";
+	$.witnessPhoneReal.value = "";
+	$.witnessEmailTextFieldReal.value = "";
+}
+
+function hideWitnessAddingScreenReal() {
+	var anim = Ti.UI.createAnimation();
+	anim.duration = 400;
+	anim.left = "100%";
+	$.witnessDataReal.animate(anim);
+	showAddingScreen = 0;
+	anim = null;
+	$.witnessViewReal.addingViewDisplayed12 = 0;
+}
+
+function validateAndSaveWitnessReal() {
+	var name = $.witnessNameTextFieldReal.value;
+	name.replace(' ', '');
+	if (name.length == 0) {
+		alert("Please enter a Name");
+		return;
+	}
+	if ((parseFloat($.witnessPhoneReal.value) == 'NaN') || $.witnessPhoneReal.value.length != 10) {
+		alert("Phone Number is Invalid");
+		return;
+	}
+	if (!$.witnessEmailTextFieldReal.value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
+		alert("Email Id is Invalid");
+		return;
+	}
+	var blob = {
+		id : $.witnessNameTextFieldReal.id,
+		name : $.witnessNameTextFieldReal.value,
+		phone : $.witnessPhoneReal.value,
+		emailId : $.witnessEmailTextFieldReal.value,
+	};
+	if ($.witnessViewReal.toEdit == 1) {
+		var temp = [];
+		for ( i = 0; i < witnessArr.length; i++) {
+			if (witnessArr[i].id == $.witnessNameTextFieldReal.id) {
+				Alloy.Globals.changeInWitness = 1;
+				temp.push(blob);
+			} else {
+				temp.push(witnessArr[i]);
+			}
+		}
+		witnessArr = [];
+		witnessArr = temp;
+		temp = [];
+	} else {
+		Alloy.Globals.changeInWitness = 1;
+		witnessArr.push(blob);
+	}
+
+	$.witnessNameTextFieldReal.id = "";
+	$.witnessNameTextFieldReal.value = "";
+	$.witnessPhoneReal.value = "";
+	$.witnessEmailTextFieldReal.value = "";
+
+	createWitnessViewReal();
+	hideWitnessAddingScreenReal();
+
+}
+
+function createWitnessViewReal() {
+	if ($.ListCollectionScrollerWitnessReal && $.ListCollectionScrollerWitnessReal.children != undefined) {
+		var removeData = [];
+		for ( i = $.ListCollectionScrollerWitnessReal.children.length; i > 0; i--) {
+			removeData.push($.ListCollectionScrollerWitnessReal.children[i - 1]);
+		};
+		for ( i = 0; i < removeData.length; i++) {
+			$.ListCollectionScrollerWitnessReal.remove(removeData[i]);
+		}
+		removeData = null;
+	};
+	viewArrayReal = [];
+	for ( i = 0; i < witnessArr.length; i++) {
+		viewArrayReal.push(createCustomViewReal(witnessArr[i], i));
+	}
+	for ( i = 0; i < viewArrayReal.length; i++) {
+		$.ListCollectionScrollerWitnessReal.add(viewArrayReal[i]);
+	}
+}
+
+function createCustomViewReal(blob, index) {
+	var calculatedTop = (index * 80) + 10;
+	var containerView = Ti.UI.createView({
+		top : calculatedTop,
+		left : -5,
+		right : -5,
+		height : 80,
+		backgroundColor : 'transparent',
+		bubbleParent : false,
+	});
+	var deleteButton = Ti.UI.createImageView({
+		left : 7,
+		width : 40,
+		height : 40,
+		image : "/images/logo/delete.png",
+		bubbleParent : false,
+		opacity : 0.0,
+		touchEnabled : false
+	});
+	var mainView = Ti.UI.createView({
+		left : 10,
+		right : 10,
+		height : 70,
+		backgroundColor : 'white',
+		bubbleParent : false,
+		borderRadius : 5,
+		id : blob.id
+	});
+	var NameHeading = Ti.UI.createLabel({
+		top : 5,
+		left : 10,
+		height : 25,
+		font : {
+			fontSize : 16,
+			fontWeight : 'bold',
+		},
+		text : "Name",
+		bubbleParent : true,
+	});
+	var nameLabel = Ti.UI.createLabel({
+		bottom : 5,
+		left : 10,
+		height : 25,
+		font : {
+			fontSize : 16,
+		},
+		attachedBlob : blob,
+		text : blob.name,
+		bubbleParent : true,
+	});
+	var detailView = Ti.UI.createImageView({
+		right : 3,
+		width : 25,
+		height : 25,
+		image : "/images/logo/detail.png",
+		bubbleParent : true,
+	});
+
+	mainView.addEventListener('click', function(e) {
+		$.witnessNameTextFieldReal.id = blob.name + blob.phone + blob.emailId;
+		$.witnessNameTextFieldReal.value = blob.name;
+		$.witnessPhoneReal.value = blob.phone;
+		$.witnessEmailTextFieldReal.value = blob.emailId;
+
+		var anim = Ti.UI.createAnimation();
+		anim.left = "0%";
+		anim.duration = 300;
+		$.witnessDataReal.animate(anim);
+		showAddingScreen = 1;
+		anim = null;
+		$.witnessViewReal.toEdit = 1;
+
+		setTimeout(function(e) {
+			$.witnessViewReal.addingViewDisplayed12 = 1;
+		}, 0);
+
+	});
+
+	mainView.addEventListener('swipe', function(e) {
+		if (e.direction == 'right') {
+			deleteButton.opacity = 1.0;
+			deleteButton.touchEnabled = true;
+			var anim = Ti.UI.createAnimation();
+			anim.duration = 500;
+			anim.left = 70;
+			anim.right = -50;
+			mainView.animate(anim);
+			anim.addEventListener('complete', function(e) {
+				var animComplete = Ti.UI.createAnimation();
+				animComplete.duration = 300;
+				animComplete.left = 60;
+				anim.right = -40;
+				mainView.animate(animComplete);
+				animComplete = null;
+			});
+		} else {
+			if (e.direction = 'left') {
+				deleteButton.opacity = 0.0;
+				deleteButton.touchEnabled = false;
+				var anim = Ti.UI.createAnimation();
+				anim.duration = 500;
+				anim.left = 10;
+				anim.right = 10;
+				mainView.animate(anim);
+				anim = null;
+			}
+		}
+	});
+
+	deleteButton.addEventListener('click', function(e) {
+		if (deleteButton.touchEnabled == false) {
+			return;
+		}
+		// witnessArr
+		var temp = [];
+		for ( i = 0; i < witnessArr.length; i++) {
+			alert(witnessArr[i].id);
+			alert(witnessArr.id);
+			if (witnessArr[i].id == mainView.id) {
+
+			} else {
+				temp.push(witnessArr[i]);
+			}
+		}
+		witnessArr = [];
+		witnessArr = temp;
+		createWitnessViewReal();
+		Alloy.Globals.changeInWitness = 1;
+	});
+
+	mainView.add(NameHeading);
+	mainView.add(nameLabel);
+	mainView.add(detailView);
+	containerView.add(deleteButton);
+	containerView.add(mainView);
+	return containerView;
+}
+
+function resetWitness() {
+	$.witnessNameTextFieldReal.id = "";
+	$.witnessNameTextFieldReal.value = "";
+	$.witnessPhoneReal.value = "";
+	$.witnessEmailTextFieldReal.value = "";
+}
+
+function clear1Real() {
+	$.witnessNameTextFieldReal.value = "";
+}
+
+function clear2Real() {
+	$.witnessPhoneReal.value = "";
+}
+
+function clear3Real() {
+	$.witnessEmailTextFieldReal.value = "";
+}
+
+function blurInputReal() {
+	if (OS_IOS) {
+		$.witnessNameTextFieldReal.blur();
+		$.witnessPhoneReal.blur();
+		$.witnessEmailTextFieldReal.blur();
+	} else {
+		Ti.UI.Android.hideSoftKeyboard();
+	}
+}
+
+//----------------------------------------------
+
+function showMap() {
+	anno3 = Map.createAnnotation({
+		latitude : parseFloat(userLat).toFixed(4),
+		longitude : parseFloat(userLong).toFixed(4),
+		title : "Location",
+		subtitle : "This is Location of Incident",
+		draggable : true
+	});
+
+	mapShown = 1;
+
+	mainMapView = Map.createView({
+		mapType : Map.NORMAL_TYPE,
+		animate : true,
+		regionFit : true,
+		userLocation : true,
+		enableZoomControls : false,
+		width : "100%",
+		height : "100%",
+		top : '0',
+		left : '0',
+	});
+
+	mainMapView.addEventListener('pinchangedragstate', function(e) {
+		Ti.API.info(e.title + ": newState=" + e.newState + ", lat=" + e.annotation.latitude + ", lon=" + e.annotation.longitude);
+		userLat = e.annotation.latitude;
+		userLong = e.annotation.longitude;
+		Alloy.Globals.userLocationChanged = 1;
+	});
+
+	$.mapBackground.add(mainMapView);
+
+	Titanium.Geolocation.getCurrentPosition(function(e) {
+		try {
+			var region = {
+				latitude : e.coords.latitude,
+				longitude : e.coords.longitude,
+				animate : true,
+				latitudeDelta : 0.01,
+				longitudeDelta : 0.01
+			};
+			mainMapView.setLocation(region);
+		} catch(e) {
+			var region = {
+				latitude : 18.97,
+				longitude : 72.82,
+				animate : true,
+				latitudeDelta : 0.01,
+				longitudeDelta : 0.01
+			};
+			mainMapView.setLocation(region);
+			alert("User Location Not Found");
+		}
+	});
+	mainMapView.addAnnotation(anno3);
+	$.mapBackground.add(mainMapView);
+	var anim = Ti.UI.createAnimation();
+	anim.left = "0%", anim.duration = 400;
+	$.mapBackground.animate(anim);
+
+}
 

@@ -31,7 +31,7 @@ var _tempFile = null;
 // -----------------------------------------------------------------------------variable declaration
 
 var userLat,UserLong;
-var dateSelected;
+var dateSelected = "";
 var Map = require('ti.map');
 var mainMapView;
 var witnessSource = [];
@@ -46,8 +46,43 @@ var anno3;
 //----------------------------------------------------------------------------- function Body
 
 
+function saveAndSendEmail() {
+	saveDataToDB();
+}
+
 
 function goPrevious() {
+	$.nextButton.left = "80%";
+	$.SendEmail.right = "-50%";
+	$.restartButton.left = "60%";
+	if($.statusPointer.tag == 1)
+	{
+		return;
+	}
+	else
+	{
+		$.statusPointer.tag--;
+		switch($.statusPointer.tag){
+			case 1 : $.statusPointer.backgroundImage = "/images/headers/top1.png";break;
+			case 2 : $.statusPointer.backgroundImage = "/images/headers/top2.png";break;
+			case 3 : $.statusPointer.backgroundImage = "/images/headers/top3.png";break;
+			case 4 : $.statusPointer.backgroundImage = "/images/headers/top4.png";break;
+			case 5 : $.statusPointer.backgroundImage = "/images/headers/top5.png";break;
+			case 6 : $.statusPointer.backgroundImage = "/images/headers/top6.png";break;
+			case 7 : $.statusPointer.backgroundImage = "/images/headers/top7.png";break;
+		}
+		if($.statusPointer.tag < 6 && $.statusPointer.animateRight != 0){
+			var anim = Ti.UI.createAnimation();
+			anim.duration = 400;
+			anim.left = -4;
+			$.statusPointer.animate(anim);
+			anim = null;
+			$.statusPointer.animateRight = 0;
+		}
+		
+	}
+	
+	
 	if ($.witnessView.addingViewDisplayed == 1) {
 		$.witnessView.addingViewDisplayed = 0;
 		blurInput();
@@ -78,71 +113,114 @@ function goPrevious() {
 
 
 function goNext() {
+	$.restartButton.initiated = 0;
+	
+	if($.parentScrollableView.currentPageIndex == 5){
+		$.nextButton.left = "100%";
+		$.SendEmail.right = "2%";
+		$.restartButton.left = "55%";
+	}
+	
 	if ($.parentScrollableView.currentPageIndex == 6) {
-		saveDataToDB();
+		
 		return;
 	} else {
+		if($.statusPointer.tag == 2){
+			if(dateSelected == "")
+			{
+				alert("Please Select Incident Date");
+				return;
+			}
+		}
 		$.parentScrollableView.moveNext();
 	}
+	if($.statusPointer.tag == 7)
+	{
+		return;
+	}
+	else
+	{
+		$.statusPointer.tag++;
+		switch($.statusPointer.tag){
+			case 1 : $.statusPointer.backgroundImage = "/images/headers/top1.png";break;
+			case 2 : $.statusPointer.backgroundImage = "/images/headers/top2.png";break;
+			case 3 : $.statusPointer.backgroundImage = "/images/headers/top3.png";break;
+			case 4 : $.statusPointer.backgroundImage = "/images/headers/top4.png";break;
+			case 5 : $.statusPointer.backgroundImage = "/images/headers/top5.png";break;
+			case 6 : $.statusPointer.backgroundImage = "/images/headers/top6.png";break;
+			case 7 : $.statusPointer.backgroundImage = "/images/headers/top7.png";break;
+		}
+		if($.statusPointer.tag == 6){
+			var anim = Ti.UI.createAnimation();
+			anim.duration = 400;
+			anim.left = "-43%";
+			$.statusPointer.animate(anim);
+			anim = null;
+			$.statusPointer.animateRight = 1;
+		}
+	}
+	
 }
 
 
 
 $.parentScrollableView.addEventListener('scrollend', function(e) {
 	$.parentScrollableView.currentPageIndex = e.currentPage;
-
+	
 	if ($.parentScrollableView.currentPageIndex == 2 && $.mapBackground.mapLoaded == 0) {
-		$.mapBackground.mapLoaded = 1;
-		
-		mainMapView = Map.createView({
-			mapType : Map.NORMAL_TYPE,
-			animate : true,
-			regionFit : true,
-			userLocation : true,
-			enableZoomControls : false,
-			width : "100%",
-			height : "100%",
-			top : '0',
-			left : '0'
-		}); 
 		
 		
-		mainMapView.addEventListener('pinchangedragstate', function(e) {
-			Ti.API.info(e.title + ": newState=" + e.newState + ", lat=" + e.annotation.latitude + ", lon=" + e.annotation.longitude);
-			userLat = e.annotation.latitude;
-			UserLong = e.annotation.longitude;
-		}); 
+		if ($.restartButton.initiated != 1) {
+			$.mapBackground.mapLoaded = 1;
 
-		
-		$.mapBackground.add(mainMapView);
+			mainMapView = Map.createView({
+				mapType : Map.NORMAL_TYPE,
+				animate : true,
+				regionFit : true,
+				userLocation : true,
+				enableZoomControls : false,
+				width : "100%",
+				height : "100%",
+				top : '0',
+				left : '0'
+			});
 
-		Titanium.Geolocation.getCurrentPosition(function(e) {
-			try {
-				var region = {
-					latitude : e.coords.latitude,
-					longitude : e.coords.longitude,
-					animate : true,
-					latitudeDelta : 0.01,
-					longitudeDelta : 0.01
-				};
-				userLat = e.coords.latitude;
-				UserLong = e.coords.longitude;
-				mainMapView.setLocation(region);
-			} catch(e) {
-				var region = {
-					latitude : 18.97,
-					longitude : 72.82,
-					animate : true,
-					latitudeDelta : 0.01,
-					longitudeDelta : 0.01
-				};
-				userLat = 18.97;
-				UserLong = 72.82;
-				mainMapView.setLocation(region);
-				alert("User Location Not Found");
-			}
-			
-		});
+			mainMapView.addEventListener('pinchangedragstate', function(e) {
+				Ti.API.info(e.title + ": newState=" + e.newState + ", lat=" + e.annotation.latitude + ", lon=" + e.annotation.longitude);
+				userLat = e.annotation.latitude;
+				UserLong = e.annotation.longitude;
+			});
+
+			$.mapBackground.add(mainMapView);
+
+			Titanium.Geolocation.getCurrentPosition(function(e) {
+				try {
+					var region = {
+						latitude : e.coords.latitude,
+						longitude : e.coords.longitude,
+						animate : true,
+						latitudeDelta : 0.01,
+						longitudeDelta : 0.01
+					};
+					userLat = e.coords.latitude;
+					UserLong = e.coords.longitude;
+					mainMapView.setLocation(region);
+				} catch(e) {
+					var region = {
+						latitude : 18.97,
+						longitude : 72.82,
+						animate : true,
+						latitudeDelta : 0.01,
+						longitudeDelta : 0.01
+					};
+					userLat = 18.97;
+					UserLong = 72.82;
+					mainMapView.setLocation(region);
+					alert("User Location Not Found");
+				}
+
+			});
+		}
 	}
 	else
 	{
@@ -876,8 +954,8 @@ function createCustomViewReal(blob, index) {
 		var temp = [];
 		for(i=0;i<witnessSourceReal.length;i++)
 		{
-			alert(witnessSourceReal[i].id);
-			alert(mainView.id);
+			// alert(witnessSourceReal[i].id);
+			// alert(mainView.id);
 			if(witnessSourceReal[i].id == mainView.id)
 			{
 				
@@ -929,7 +1007,7 @@ function getDatePicker() {
 		useSpinner : true,
 		value : new Date(),
 		font : {
-			fontSize : 25
+			fontSize : 33
 		},
 		left : 0,
 		top : "50%",
@@ -944,13 +1022,26 @@ function getDatePicker() {
 		timeFormat : 'hh:mm z',
 		top : 10,
 		font : {
-			fontSize : '30dp'
+			fontSize : 33
 		},
 		top : '50%',
-		right : '0%',
-		width : '35%',
+		right : '-3%',
+		width : '38%',
 		height : '40%'
 	});
+	
+	if(OS_IOS)
+	{
+		datepicker.width = "65%";
+		timepicker.right = "-3%";
+		timepicker.width = "38%";
+	}
+	else
+	{
+		datepicker.width = "55%";
+		timepicker.right = "0%";
+		timepicker.width = "45%";
+	}
 	
 	var datelabel = "";
 
@@ -975,14 +1066,16 @@ function getDatePicker() {
 		// height : '50%'
 	// });
 
-	var done = Titanium.UI.createButton({
-		backgroundColor : '#999966',
+	var done = Ti.UI.createImageView({
+		backgroundColor : 'transparent',
 		color : '#003366',
-		title : 'Done',
+		// title : 'Done',
 		top : '40%',
 		right : '0%',
-		height : "10%",
-		width : '30%',
+		height : "50",
+		width : '80',
+		image : "/images/toolbarImages/done1.png",
+		borderRadius : 5
 	});
 	
 	
@@ -1089,7 +1182,11 @@ function loadEnteredDate() {
 	Titanium.Geolocation.reverseGeocoder(userLat, UserLong, function(e) {
 		// var arr = e.places[0].address.split(",");
 		 // $.actualLocation.text = arr[0] + "," + arr[1] + "," + arr[2] + "," + arr[3] + "," + arr[4];
+		 try{
 		 $.actualLocation.text = e.places[0].address;
+		 }catch(e){
+		 	alert("There was a problen in getting your location\nPlease Try Again");
+		 }
 	});
 	
 	switch($.imageSelection.selcectorTag) {
@@ -1340,8 +1437,11 @@ function saveDataToDB() {
 		img2 : imgBlob2,
 		img3 : imgBlob3,
 		img4 : imgBlob4,
-		imgSelectorTag : $.imageSelection.selcectorTag
+		imgSelectorTag : $.imageSelection.selcectorTag,
+		lat : userLat,
+		lon : UserLong,
 	};
+	// alert(UserLong);
 
 	var otherDriverArr = [];
 	for ( i = 0; i < witnessSource.length; i++) {
@@ -1374,5 +1474,26 @@ function saveDataToDB() {
 	
 	alert("all success now fetch");
 }
+
+
+function restartProcedure() {
+	
+	$.restartButton.initiated = 1;
+	
+	userLat = "";
+	UserLong = "";
+	witnessSourceReal = [];
+	witnessSource = [];
+	dateSelected = "";
+	
+	var counter = 0;
+	while (counter < 8) {
+		goPrevious();
+		counter++;
+	}
+
+	$.dateSelectionLabel.text = "Select A Date";
+}
+
 
 

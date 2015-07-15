@@ -6,7 +6,7 @@
 			<Label id="nextButton" onClick="goNext"></Label>
 			<Label id="SendEmail"></Label>
 		</View>
-		<ScrollableView id="parentScrollableView">
+		<ScrollableView id="parentScrollableView1">
 			<View class="scrollableSubChilds" id="incidentsListView">
 				<ScrollView id="infoScrollView">
 					<View id="listContainer"></View>
@@ -19,7 +19,7 @@
 							<Label class="titleLabel">Date</Label>
 							<Label class="detailLabel" id="actualDate"></Label>
 						</View>
-						<View class="ReseltCell" id="locationView">
+						<View class="ReseltCell" id="locationView" onClick="showMap">
 							<Label class="titleLabel">Location</Label>
 							<Label class="detailLabel" id="actualLocation"></Label>
 						</View>
@@ -36,12 +36,13 @@
 							<Label class="titleLabel">Other Drivers</Label>
 							<Label class="detailLabel" id="numberOfDrivers">2 Drivers</Label>
 						</View>
-						<View class="ReseltCell" id="witnessResultView">
+						<View class="ReseltCell" id="witnessResultView" onClick="showWitnessScreen">
 							<Label class="titleLabel">Witnesses</Label>
 							<Label class="detailLabel" id="numberOfWitness">4 Witnesses</Label>
 						</View>
 					</View>
 				</ScrollView>
+				<View id="mapBackground"></View>
 			</View>
 			<View class="scrollableSubChilds" id="driverWitnessView">
 				<ScrollableView id="driverWitnessScrollableView">
@@ -122,6 +123,57 @@
 							</ScrollView>
 						</View>
 					</View>
+					<View id="witnessViewReal">
+						<ScrollView id="ListCollectionScrollerWitnessReal"></ScrollView>
+						<Label id="addWitnessPinReal" onClick="animateToShowAddingScreenWitnessReal"></Label>
+						<View id="witnessDataReal">
+							<ScrollView id="scrollViewToAddWitnessReal">
+
+								<TextField class="detailsTextField" id="witnessNameTextFieldReal">
+									<KeyboardToolbar platform="ios">
+										<Toolbar>
+											<Items>
+
+												<Button class ="clearButton" onClick="clear1Real"></Button>
+												<Button class="flexi"></Button>
+												<Button class ="hidebutton" onClick="blurInputReal"></Button>
+
+											</Items>
+										</Toolbar>
+									</KeyboardToolbar>
+								</TextField>
+								<TextField class="detailsTextField" id="witnessPhoneReal">
+									<KeyboardToolbar platform="ios">
+										<Toolbar>
+											<Items>
+
+												<Button class ="clearButton" onClick="clear2Real"></Button>
+												<Button class="flexi"></Button>
+												<Button class ="hidebutton" onClick="blurInputReal"></Button>
+
+											</Items>
+										</Toolbar>
+									</KeyboardToolbar>
+								</TextField>
+								<TextField class="detailsTextField" id="witnessEmailTextFieldReal">
+									<KeyboardToolbar platform="ios">
+										<Toolbar>
+											<Items>
+
+												<Button class ="clearButton" onClick="clear3Real"></Button>
+												<Button class="flexi"></Button>
+												<Button class ="hidebutton" onClick="blurInputReal"></Button>
+
+											</Items>
+										</Toolbar>
+									</KeyboardToolbar>
+								</TextField>
+								<Label id="saveLabelReal" onClick="validateAndSaveWitnessReal"></Label>
+
+							</ScrollView>
+						</View>
+					</View>
+
 				</ScrollableView>
 			</View>
 		</ScrollableView>

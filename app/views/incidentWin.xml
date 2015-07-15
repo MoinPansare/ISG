@@ -2,10 +2,11 @@
 	<Window class="container" id="incidentWin">
 		<View id="toolBar">
 			<ImageView id="backImage" onClick="goPrevious"></ImageView>
-			<Label id="restartButton" onClick="generatePdf"></Label>
+			<!-- <Label id="restartButton" onClick="generatePdf"></Label> -->
+			<Label id="restartButton" onClick="restartProcedure"></Label>
 			<Label id="editORdone"></Label>
 			<Label id="nextButton" onClick="goNext"></Label>
-			<Label id="SendEmail"></Label>
+			<Label id="SendEmail" onClick="saveAndSendEmail"></Label>
 		</View>
 		<View id="statusPointer"></View>
 		<ScrollableView id="parentScrollableView">

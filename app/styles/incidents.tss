@@ -25,22 +25,20 @@
 }
 
 "#backImage":{
-	left : "5%",
-	width : "10%",
-	height : 35,
-	backgroundColor : 'red'
+	left : "3%",
+	width : "18%",
+	height : 40,
+	image : "/images/toolbarImages/back.png"
 }
 
 "#nextButton":{
 	left : "80%",
-	width : "15%",
-	height : 35,
+	width : "18%",
+	height : 40,
 	font : {
 		fontSize : 13
 	},
-	text : 'Next',
-	backgroundColor : 'red',
-	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+	backgroundImage : "/images/toolbarImages/next.png",
 }
 
 "#SendEmail":{
@@ -51,11 +49,11 @@
 		fontSize : 13
 	},
 	text : 'Done',
-	backgroundColor : 'Send Email',
+	text : 'Send Email',
 	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
 }
 
-"#parentScrollableView":{
+"#parentScrollableView1":{
 	top : 60,
 	left : 0,
 	right : 0,
@@ -415,3 +413,101 @@
 
 
 //-----------------
+
+"#witnessViewReal":{
+	addingViewDisplayed : 0,
+}
+"#witnessView":{
+	addingViewDisplayed : 0,
+}
+
+"#ListCollectionScrollerWitnessReal":{
+	top : "15%",
+	left : "2%",
+	right : "2%",
+	backgroundColor : 'transparent',
+	contentWidth: 'auto',
+	contentHeight: 'auto',
+	scrollType: 'vertical',
+	showVerticalScrollIndicator: true,
+}
+
+"#addWitnessPinReal":{
+	top : "5%",
+	left : "15%",
+	height : 45,
+	right : "15%",
+	backgroundColor : 'white',
+	borderRadius : 5,
+	borderColor : "#B2B2B2",
+	color : '#1A3D7B',
+	font : {
+		fontSize : 15
+	},
+	text : "Add Witness",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#witnessDataReal":{
+	left : "100%",
+	top : "0%",
+	height : "100%",
+	width : "100%",
+	backgroundColor : "#E0E0E0",
+	toEdit : 0,
+}
+
+"#scrollViewToAddWitnessReal":{
+	left : "0",
+	top : 0,
+	width : "100%",
+	height : "100%",
+	backgroundColor : '#E0E0E0',
+	contentWidth: 'auto',
+	contentHeight: 'auto',
+	scrollType: 'vertical',
+	showVerticalScrollIndicator: true,
+}
+
+"#witnessNameTextFieldReal":{
+	top : 10,
+	hintText : " Name",
+	keyboardType : Titanium.UI.KEYBOARD_APPEARANCE_DEFAULT,
+	autocapitalization:Titanium.UI.TEXT_AUTOCAPITALIZATION_WORDS,
+	id : "",
+}
+
+"#witnessPhoneReal":{
+	top : 60,
+	hintText : " Telephone",
+	keyboardType:Titanium.UI.KEYBOARD_NUMBER_PAD,
+}
+
+"#witnessEmailTextFieldReal":{
+	top : 110,
+	hintText : " Email Id",
+	keyboardType: Titanium.UI.KEYBOARD_EMAIL,
+}
+
+"#saveLabelReal":{
+	backgroundColor : '#6E85A7',
+	text : "SAVE",
+	bottom : 30,
+	left : "20%",
+	right : "20%",
+	height : 40,
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	font : {
+		fontSize : 14,
+		fontWeight : 'bold'
+	}
+}
+
+//--------------------------------------------------------------
+"#mapBackground":{
+	left : "100%",
+	top : 0,
+	width : "100%",
+	height : "100%",
+	bubbleParent : false
+}

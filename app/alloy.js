@@ -14,3 +14,6 @@ Alloy.Globals.currentWindow = "";
 Alloy.Globals.winStack = [];
 Alloy.Globals.switchValue = -1;
 Alloy.Globals.databaseVersion = "MyDatabase1";
+Alloy.Globals.chnageInOtherDriver = 0;
+Alloy.Globals.changeInWitness = 0;
+Alloy.Globals.userLocationChanged = 0;

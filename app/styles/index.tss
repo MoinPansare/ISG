@@ -38,7 +38,8 @@
 	},
 	textAlign: Titanium.UI.TEXT_ALIGNMENT_CENTER,
 	text : 'Incident Support Group Limited',
-	backgroundColor: '#E0E0E0'
+	backgroundColor: '#E0E0E0',
+	color : 'black',
 }
 
 "#bodyLabel":{
@@ -50,5 +51,6 @@
 	font: {
 		fontSize: 16
 	},
-	textAlign: Titanium.UI.TEXT_ALIGNMENT_LEFT
+	textAlign: Titanium.UI.TEXT_ALIGNMENT_LEFT,
+	color : 'black',
 }
