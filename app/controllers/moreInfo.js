@@ -91,13 +91,14 @@ function saveUserInfo () {
 	var db = require('databaseinteractions');
 	var blob = {
 		name : $.userName.value,
-		policyNumber : $.policyNumber.value,
+		policy : $.policyNumber.value,
 		carRegistration : $.carRegistration.value,
 		phone : $.phoneNumber.value,
 		mobile : $.mobileNumber.value,
 		emailId : $.emailId.value,
 	};
 	db.database.saveUser(blob);
+	goBack();
 }
 
 
