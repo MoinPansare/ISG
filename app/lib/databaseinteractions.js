@@ -145,6 +145,44 @@ var DatabaseInteraction = {};
 		db.close();
 		return arrayToReturn;
 	};
+	
+	
+	DatabaseInteraction.saveUser = function(blob) {
+		var db = Titanium.Database.open(Alloy.Globals.databaseVersion);
+		db.execute('CREATE TABLE IF NOT EXISTS user (name TEXT,policy TEXT,carRegistration TEXT,phone TEXT,mobile TEXT,emailId TEXT)');
+		db.execute('DELETE FROM user');
+		db.execute('INSERT INTO user (name,policy,carRegistration,phone,mobile,emailId) VALUES(?,?,?,?,?,?)', escape(blob.name), escape(blob.policy), escape(blob.carRegistration), blob.phone,blob.mobile, escape(blob.emailId));
+		db.close();
+	}; 
+	
+	
+	
+	DatabaseInteraction.getUserDetail = function() {
+		var db = Titanium.Database.open(Alloy.Globals.databaseVersion);
+		db.execute('CREATE TABLE IF NOT EXISTS user (name TEXT,policy TEXT,carRegistration TEXT,phone TEXT,mobile TEXT,emailId TEXT)');
+
+		var holddatavar = db.execute('SELECT * FROM user');
+
+		var arrayToReturn = [];
+		var blob = null;
+		while (holddatavar.isValidRow()) {
+			var blob = {
+				name : unescape(holddatavar.fieldByName('name')),
+				policy : unescape(holddatavar.fieldByName('policy')),
+				carRegistration : unescape(holddatavar.fieldByName('carRegistration')),
+				phone : parseInt(holddatavar.fieldByName('phone')),
+				mobile : parseInt(holddatavar.fieldByName('mobile')),
+				emailId : unescape(holddatavar.fieldByName('emailId')),
+			};
+			break;
+
+			// holddatavar.next();
+		}
+		holddatavar.close();
+		db.close();
+		return blob;
+	}; 
+
 
 })();
 

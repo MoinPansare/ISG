@@ -43,7 +43,7 @@
 "#tab5":{
 	right : 0,
 	backgroundColor : 'transparent',
-	identifier : ''
+	identifier : 'MoreInfo'
 }
 
 ".tabimage":{

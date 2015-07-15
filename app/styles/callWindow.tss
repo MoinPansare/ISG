@@ -30,6 +30,7 @@
 		fontSize: 18,
 		fontWeight : 'bold'
 	},
+	color : 'black',
 	textAlign: Titanium.UI.TEXT_ALIGNMENT_CENTER,
 	text : 'If you need immediate help with your incident, please press the call button below and you will be put through a representative'
 }
@@ -38,7 +39,8 @@
 	top : "60%",
 	left : "35%",
 	right : "35%",
-	height : "20%",
+	// height : "20%",
+	height : 100,
 	image : "/images/logo/callButton.png"
 }
 

@@ -1,0 +1,199 @@
+
+".container" : {
+  
+}
+
+"#moreInfo":{
+	fullscreen: true,
+	backgroundColor: '#E0E0E0'
+}
+
+"#toolBar":{
+	top: 0,
+	left: 0,
+	width: "100%",
+	height: 60,
+	backgroundColor : '#6E85A7'
+}
+
+"#backImage":{
+	left : "3%",
+	width : "18%",
+	height : 40,
+	image : "/images/toolbarImages/back.png",
+	opacity : 0.0,
+	touchEnabled : false
+	// backgroundColor : 'red'
+},
+
+"#titleLabel":{
+	font : {
+		fontSize : 16,
+		fontWeight : 'bold'
+	},
+	color : 'white',
+	text : "More",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+}
+
+"#mainView":{
+	top : 60,
+	bottom : 60,
+	left : 0,
+	right : 0,
+	backgroundColor: '#E0E0E0'
+}
+
+".selectionOptions":{
+	left : "3%",
+	right : "3%",
+	height : 70,
+	backgroundColor : 'white',
+	borderRadius : 5
+}
+
+"#userDetails":{
+	top : "10",
+	
+}
+
+".iconImage":{
+	left : "3%",
+	width : 35,
+	height : 35,
+	bubbleParent : true
+}
+
+"#userIcon":{
+	image : "/images/created/user.png",
+	
+}
+
+".mainLabel":{
+	font : {
+		fontSize : 15,
+		fontWeight : 'bold'
+	},
+	color : "black",
+	left : "45",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_LEFT,
+	bubbleParent : true
+}
+
+".rightArrow":{
+	right : "9%",
+	width : 25,
+	height : 25,
+	image : "/images/created/arrow.png",
+	opacity : 0.6,
+	bubbleParent : true
+}
+
+"#settimgsView":{
+	top : 90,
+}
+
+"#settingsIcon":{
+	image : "/images/created/settings.png"
+}
+
+"#settingsView":{
+	top : "0%",
+	bottom : "0%",
+	left : "99%",
+	backgroundColor: '#E0E0E0',
+	borderColor : 'white',
+	borderWidth : 3,
+	isDisplayed : 0,
+	bubbleParent : false
+}
+
+"#settingsLabel":{
+	left : "5%",
+	width : "65%",
+	top : "20%",
+	height : 'auto',
+	color : 'black',
+	text : "Show 'Things to Photo' Help Screen",
+	font : {
+		fontSize : 16,
+		fontWeight : 'bold'
+	}
+}
+
+"#switchImage":{
+	left : "75%",
+	top : "20%",
+	width : 70,
+	height : 40,
+}
+
+"#userView":{
+	top : "0%",
+	bottom : "0%",
+	left : "99%",
+	backgroundColor: '#E0E0E0',
+	borderColor : 'white',
+	borderWidth : 3,
+	isDisplayed : 0,
+	bubbleParent : false
+}
+
+".myTextFields":{
+	backgroundColor : 'white',
+	borderRadius : 4,
+	left : "5%",
+	right : "5%",
+	paddingLeft : 5,
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_LEFT,
+	height : 50,
+	keyboardType : Titanium.UI.KEYBOARD_APPEARANCE_DEFAULT,
+}
+
+"#userName":{
+	top : 15,
+	hintText : "User Name",
+	autocapitalization:Titanium.UI.TEXT_AUTOCAPITALIZATION_WORDS,
+}
+
+"#policyNumber":{
+	top : 75,
+	hintText : "Policy Number",
+	keyboardType : Titanium.UI.KEYBOARD_NUMBER_PAD,
+}
+
+"#carRegistration":{
+	top : 135,
+	hintText : "Car Registration",
+	keyboardType : Titanium.UI.KEYBOARD_NUMBER_PAD,
+}
+
+"#phoneNumber":{
+	top : 195,
+	hintText : "Telephone Number",
+	keyboardType : Titanium.UI.KEYBOARD_NUMBER_PAD,
+}
+
+"#mobileNumber":{
+	top : 255,
+	hintText : "Mobile Number",
+	keyboardType : Titanium.UI.KEYBOARD_NUMBER_PAD,
+}
+
+"#emailId":{
+	top : 315,
+	hintText : "Email Id",
+	keyboardType : Titanium.UI.KEYBOARD_EMAIL,
+}
+
+"#saveLabel":{
+	top : 375,
+	left : "35%",
+	right : "35%",
+	height : 50,
+	text : "Save",
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	backgroundColor : '#6E85A7',
+}
+
+

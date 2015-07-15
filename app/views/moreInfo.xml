@@ -1,0 +1,34 @@
+<Alloy>
+	<Window class="container" id="moreInfo">
+		<View id="toolBar">
+			<ImageView id="backImage" onClick="goBack"></ImageView>
+			<Label id="titleLabel"></Label>
+		</View>>
+		<View id="mainView">
+			<View class="selectionOptions" id="userDetails" onClick="showUserInfo">
+				<ImageView class="iconImage" id="userIcon"></ImageView>
+				<Label class="mainLabel">Your Details</Label>
+				<ImageView class="rightArrow"></ImageView>
+			</View>
+			<View class="selectionOptions" id="settimgsView" onClick="showSettings">
+				<ImageView class="iconImage" id="settingsIcon"></ImageView>
+				<Label class="mainLabel">Settings</Label>
+				<ImageView class="rightArrow"></ImageView>
+			</View>
+			<View id="settingsView">
+				<Label id="settingsLabel"></Label>
+				<ImageView id="switchImage" onClick="toggleSwitch"></ImageView>
+			</View>
+			<View id="userView">
+				<TextField class="myTextFields" id="userName"></TextField>
+				<TextField class="myTextFields" id="policyNumber"></TextField>
+				<TextField class="myTextFields" id="carRegistration"></TextField>
+				<TextField class="myTextFields" id="phoneNumber"></TextField>
+				<TextField class="myTextFields" id="mobileNumber"></TextField>
+				<TextField class="myTextFields" id="emailId"></TextField>
+				<Label id="saveLabel" onClick="saveUserInfo"></Label>
+			</View>
+		</View>
+		<Require type="view" src="menu" id="menu"></Require>
+	</Window>
+</Alloy>

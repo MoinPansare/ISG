@@ -63,6 +63,11 @@ function openWinFun(id) {
 			win = Alloy.createController('incidents').getView();
 		}
 		break;
+	case 'MoreInfo' :
+		if (Alloy.Globals.currentWindow != 'MoreInfo') {
+			win = Alloy.createController('moreInfo').getView();
+		}
+		break;
 	default :
 		win = null;
 		break;
@@ -98,6 +103,9 @@ exports.changeBackgroundColor = function(id) {
 		break;
 	case 'Incidents' :
 		$.tabImage4.image = "/images/created/incident_hover.png";$.tabLabel4.color = "white";
+		break;
+	case 'MoreInfo' :
+		$.tabImage5.image = "/images/created/more_hover.png";$.tabLabel5.color = "white";
 		break;
 	}
 };

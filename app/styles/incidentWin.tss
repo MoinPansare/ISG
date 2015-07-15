@@ -163,6 +163,7 @@
 	text : "Select a date",
 	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
 	tag : 0,
+	color : 'black',
 }
 
 "#mapBackground":{
@@ -272,7 +273,7 @@
 	right : 0,
 	height : "100%",
 	backgroundColor : 'black',
-	opacity : 0.45
+	opacity : 0.55
 }
 
 "#overlayView":{
@@ -323,6 +324,7 @@
 		fontSize : 20
 	},
 	text : 'Close',
+	color : 'black',
 	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
 }
 
@@ -425,7 +427,8 @@
 	font : {
 		fontSize : 15,fontWeight : 'bold'
 	},
-	paddingLeft : 7
+	paddingLeft : 7,
+	color : 'black'
 }
 
 "#witnessNameTextField":{
@@ -465,7 +468,8 @@
 	font : {
 		fontSize : 15,fontWeight : 'bold'
 	},
-	backgroundColor : 'transparent'
+	backgroundColor : 'transparent',
+	color : 'black'
 }
 
 "#witnessDescriptionTextArea":{
@@ -481,7 +485,8 @@
 	borderRadius : 2,
 	hintText : "Description",
 	autocapitalization:Titanium.UI.TEXT_AUTOCAPITALIZATION_SENTENCES,
-	paddingLeft : 7
+	paddingLeft : 7,
+	color : 'black'
 }
 
 "#injuriesLabel":{
@@ -493,7 +498,8 @@
 		fontSize : 13,
 		fontWeight : 'bold'
 	},
-	backgroundColor : 'transparent'
+	backgroundColor : 'transparent',
+	color : 'black'
 }
 
 "#injuriesTextArea":{
@@ -509,7 +515,8 @@
 	borderRadius : 2,
 	hintText : " Injuries",
 	autocapitalization:Titanium.UI.TEXT_AUTOCAPITALIZATION_SENTENCES,
-	paddingLeft : 7
+	paddingLeft : 7,
+	color : 'black'
 }
 
 "#saveLabel":{
@@ -667,7 +674,8 @@
 			fontSize: 16,
 			fontWeight: 'bold'
 		},
-		bubbleParent: false
+		bubbleParent: false,
+		color : 'black',
 	}
 	
 "#dateView":{
@@ -682,6 +690,7 @@
 		fontSize: 16
 	},
 	bubbleParent: true,
+	color : 'black',
 }
 
 "#actualDate":{

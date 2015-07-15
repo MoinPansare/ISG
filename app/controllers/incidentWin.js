@@ -372,34 +372,101 @@ function showOptionsToGetImages() {
 	initialDialog.show(); 
 }
 
-function getPicFromGallery () {
-  Titanium.Media.openPhotoGallery({
-		mediaTypes : [Ti.Media.MEDIA_TYPE_PHOTO],
 
-		success : function(event) {
-			var imageG = event.media;
+function getPicFromGallery() {
 
-			Ti.API.info("before" + imageG.height + " x " + imageG.width);
-			Ti.API.info("before" + imageG.length);
-			var imageView = Titanium.UI.createImageView({
-				image : imageG,
-				width : 200,
-				height : 200
-			});
+	if (OS_IOS) {
+		Titanium.Media.openPhotoGallery({
+			mediaTypes : [Ti.Media.MEDIA_TYPE_PHOTO],
 
-			var imageN = imageView.toImage();
+			success : function(event) {
+				var imageG = event.media;
 
-			switch($.imageSelection.selcectorTag)
-			{
-				case 0 : $.img1.image = imageN;$.imageSelection.selcectorTag = 1;break;
-				case 1 : $.img2.image = imageN;$.imageSelection.selcectorTag = 2;break;
-				case 2 : $.img3.image = imageN;$.imageSelection.selcectorTag = 3;break;
-				case 3 : $.img4.image = imageN;$.imageSelection.selcectorTag = 4;break;
+				Ti.API.info("before" + imageG.height + " x " + imageG.width);
+				Ti.API.info("before" + imageG.length);
+				var imageView = Titanium.UI.createImageView({
+					image : imageG,
+					width : 200,
+					height : 200
+				});
+
+				var imageN = imageView.toImage();
+
+				switch($.imageSelection.selcectorTag) {
+				case 0 :
+					$.img1.image = imageN;
+					$.imageSelection.selcectorTag = 1;
+					break;
+				case 1 :
+					$.img2.image = imageN;
+					$.imageSelection.selcectorTag = 2;
+					break;
+				case 2 :
+					$.img3.image = imageN;
+					$.imageSelection.selcectorTag = 3;
+					break;
+				case 3 :
+					$.img4.image = imageN;
+					$.imageSelection.selcectorTag = 4;
+					break;
+				}
+
 			}
+		});
+	} else {
+		Titanium.Media.openPhotoGallery({
+			success : function(event) {
 
-		}
-	});
+				//Holds the captured image
+				var selectedImg = event.media;
+
+				// Condition to check the selected media
+				if (event.mediaType == Ti.Media.MEDIA_TYPE_PHOTO) {
+
+					//Define an image view with selected image from gallery
+					var imgView = Titanium.UI.createImageView({
+						left : 10,
+						width : 250,
+						height : 250,
+						image : selectedImg //Set selected image from gallery
+					});
+
+					//Add the image to window for displaying
+					
+					switch($.imageSelection.selcectorTag) {
+					case 0 :
+						$.img1.image = imgView.image;
+						$.imageSelection.selcectorTag = 1;
+						break;
+					case 1 :
+						$.img2.image = imgView.image;
+						$.imageSelection.selcectorTag = 2;
+						break;
+					case 2 :
+						$.img3.image = imgView.image;
+						$.imageSelection.selcectorTag = 3;
+						break;
+					case 3 :
+						$.img4.image = imgView.image;
+						$.imageSelection.selcectorTag = 4;
+						break;
+					}
+
+				}
+			},
+			cancel : function() {
+				//While cancellation of the process
+				
+			},
+			error : function(error) {
+				// If any error occurs during the process
+				alert("error on selecting image");
+			}
+		});
+	}
+
 }
+
 
 function changeToggle () {
   Alloy.Globals.switchValue = -(Alloy.Globals.switchValue);
@@ -601,6 +668,7 @@ function createCustomView(blob, index) {
 		},
 		text : "Name",
 		bubbleParent : true,
+		color : 'black'
 	});
 	var nameLabel = Ti.UI.createLabel({
 		bottom : 5,
@@ -612,6 +680,7 @@ function createCustomView(blob, index) {
 		attachedBlob : blob,
 		text : blob.name,
 		bubbleParent : true,
+		color : 'black'
 	});
 	var detailView = Ti.UI.createImageView({
 		right : 3,
@@ -876,6 +945,7 @@ function createCustomViewReal(blob, index) {
 		},
 		text : "Name",
 		bubbleParent : true,
+		color : 'black'
 	});
 	var nameLabel = Ti.UI.createLabel({
 		bottom : 5,
@@ -887,6 +957,7 @@ function createCustomViewReal(blob, index) {
 		attachedBlob : blob,
 		text : blob.name,
 		bubbleParent : true,
+		color : 'black'
 	});
 	var detailView = Ti.UI.createImageView({
 		right : 3,
@@ -1012,7 +1083,8 @@ function getDatePicker() {
 		left : 0,
 		top : "50%",
 		width : "65%",
-		height : "40%",
+		height : 'auto',
+		// height : "40%",
 		value : new Date()
 	});
 	var timepicker = Titanium.UI.createPicker({
@@ -1038,9 +1110,9 @@ function getDatePicker() {
 	}
 	else
 	{
-		datepicker.width = "55%";
+		datepicker.width = "53%";
 		timepicker.right = "0%";
-		timepicker.width = "45%";
+		timepicker.width = "48%";
 	}
 	
 	var datelabel = "";
@@ -1488,6 +1560,7 @@ function restartProcedure() {
 	
 	var counter = 0;
 	while (counter < 8) {
+		alert("going back :" + counter);
 		goPrevious();
 		counter++;
 	}
