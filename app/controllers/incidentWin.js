@@ -11,8 +11,6 @@ Ti.Geolocation.purpose = 'Location based services for the app';
 Ti.Geolocation.accuracy = Ti.Geolocation.ACCURACY_NEAREST_TEN_METERS;
 Ti.Geolocation.preferredProvider = Ti.Geolocation.PROVIDER_GPS;
 
-
-
 //-----------------------------------------------------------------------------pdf generation
 // works for snapshot
 
@@ -46,9 +44,97 @@ var anno3;
 //----------------------------------------------------------------------------- function Body
 
 
+
+
+
 function saveAndSendEmail() {
 	saveDataToDB();
+	generatePdfToShow();
+
+	setTimeout(function(e) {
+		var emailDialog = Ti.UI.createEmailDialog();
+		emailDialog.subject = "Incident Report";
+		emailDialog.toRecipients = ['repairs@incidentsupportgroup.co.uk'];
+		// emailDialog.toRecipients = ['moin.6192@gmail.com'];
+		emailDialog.messageBody = 'Attached is an incident report from ISG helpline App ';
+		
+		/*
+		if (Ti.Platform.osname == 'android') {
+			switch($.imageSelection.selcectorTag) {
+			case 1 :
+			var f = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img1x.jpg');
+			emailDialog.addAttachment(f.read());
+				// emailDialog.addAttachment($.img1.toImage().media);
+				break;
+			case 2 :
+			var f = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img1x.jpg');
+			var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img2x.jpg');
+			emailDialog.addAttachment(f.read());
+			emailDialog.addAttachment(f1.read());
+				// emailDialog.addAttachment($.img1.toImage().media);
+				// emailDialog.addAttachment($.img2.toImage().media);
+				break;
+			case 3 :
+				emailDialog.addAttachment($.img1.toImage().media);
+				emailDialog.addAttachment($.img2.toImage().media);
+				emailDialog.addAttachment($.img3.toImage().media);
+				break;
+			case 4 :
+				emailDialog.addAttachment($.img1.toImage().media);
+				emailDialog.addAttachment($.img2.toImage().media);
+				emailDialog.addAttachment($.img3.toImage().media);
+				emailDialog.addAttachment($.img4.toImage().media);
+				break;
+			}
+		} else {
+			switch($.imageSelection.selcectorTag) {
+			case 1 :
+				emailDialog.addAttachment($.img1.toImage());
+				break;
+			case 2 :
+				emailDialog.addAttachment($.img1.toImage());
+				emailDialog.addAttachment($.img2.toImage());
+				break;
+			case 3 :
+				emailDialog.addAttachment($.img1.toImage());
+				emailDialog.addAttachment($.img2.toImage());
+				emailDialog.addAttachment($.img3.toImage());
+				break;
+			case 4 :
+				emailDialog.addAttachment($.img1.toImage());
+				emailDialog.addAttachment($.img2.toImage());
+				emailDialog.addAttachment($.img3.toImage());
+				emailDialog.addAttachment($.img4.toImage());
+				break;
+			}
+		}
+		*/
+		var file = Ti.Filesystem.getFile(Ti.Filesystem.getTempDirectory(), 'sendingPdf1.pdf');
+		if (file.exists()) {
+			emailDialog.addAttachment(file.read());
+		} else {
+			Ti.API.error('file does not exists');
+		}
+
+		emailDialog.addEventListener('complete', function(e) {
+
+			if (e.result == emailDialog.SENT) {
+				if (Ti.Platform.osname != 'android') {
+					// android doesn't give us useful result codes.
+					// it anyway shows a toast.
+					alert("email sent successfully");
+				}
+			} else {
+				alert("message was not sent. result = " + e.result);
+			}
+		});
+		emailDialog.open();
+	}, 100);
+
 }
+
+
+
 
 
 function goPrevious() {
@@ -113,6 +199,10 @@ function goPrevious() {
 
 
 function goNext() {
+	
+	$.backImage.opacity = 1.0;
+	$.backImage.touchEnabled = true;
+	
 	$.restartButton.initiated = 0;
 	
 	if($.parentScrollableView.currentPageIndex == 5){
@@ -166,6 +256,13 @@ function goNext() {
 
 $.parentScrollableView.addEventListener('scrollend', function(e) {
 	$.parentScrollableView.currentPageIndex = e.currentPage;
+	
+	
+	if (e.currentPage == 0) {
+		$.backImage.opacity = 0.0;
+		$.backImage.touchEnabled = false;
+	}
+
 	
 	if ($.parentScrollableView.currentPageIndex == 2 && $.mapBackground.mapLoaded == 0) {
 		
@@ -1264,66 +1361,66 @@ function loadEnteredDate() {
 	switch($.imageSelection.selcectorTag) {
 	case 1 :
 		$.resImg1.image = $.img1.image;
-		var img = $.resImg1.toImage();
-		var resizedImage = img.imageAsResized(160,120);
-		var compression_level = 0.75; 
+		var img = $.resImg1.toBlob();
+		// var resizedImage = img.imageAsResized(160,120);
+		// var compression_level = 0.75; 
 		var imageFactory = require('ti.imagefactory');
-		resizedImage = imageFactory.compress(resizedImage, compression_level);
-		var destFile = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, 'destination.jpg');
-		destFile.write(resizedImage);
+		// resizedImage = imageFactory.compress(resizedImage, compression_level);
+		// var destFile = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, 'destination.jpg');
+		// destFile.write(resizedImage);
 		
-		
-		// var blobObj = $.img1.toImage(); 
- 		// var f = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img1x.jpg');
- 		// f.write(blobObj);
+		var blobObj = $.img1.toBlob(); 
+		var b01 = imageFactory.compress(blobObj,0.0);
+ 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img1x.jpg');
+ 		f.write(b01);
 		break;
 	case 2 :
 		$.resImg1.image = $.img1.image;
-		blobObj = $.img1.toImage(); 
- 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img1.jpg');
+		blobObj = $.img1.toBlob(); 
+ 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img1x.jpg');
  		f.write(blobObj);
  		
 		$.resImg2.image = $.img2.image;
-		blobObj2 = $.img2.toImage(); 
- 		var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img2.jpg');
+		blobObj2 = $.img2.toBlob(); 
+ 		var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img2x.jpg');
  		f1.write(blobObj2);
 		break;
 	case 3 :
 		$.resImg1.image = $.img1.image;
-		blobObj = $.img1.toImage(); 
- 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img1.jpg');
+		blobObj = $.img1.toBlob(); 
+ 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img1x.jpg');
  		f.write(blobObj);
  		
  		$.resImg2.image = $.img2.image;
-		blobObj2 = $.img2.toImage(); 
- 		var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img2.jpg');
+		blobObj2 = $.img2.toBlob(); 
+ 		var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img2x.jpg');
  		f1.write(blobObj2);
  		
  		$.resImg2.image = $.img3.image;
-		blobObj3 = $.img3.toImage(); 
- 		var f3 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img3.jpg');
+		blobObj3 = $.img3.toBlob(); 
+ 		var f3 = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img3x.jpg');
  		f3.write(blobObj3);
  		
 		break;
 	case 4 :
 		$.resImg1.image = $.img1.image;
-		blobObj = $.img1.toImage(); 
- 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img1.jpg');
+		blobObj = $.img1.toBlob(); 
+ 		var f = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img1x.jpg');
  		f.write(blobObj);
  		
  		$.resImg2.image = $.img2.image;
-		blobObj2 = $.img2.toImage(); 
- 		var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img2.jpg');
+		blobObj2 = $.img2.toBlob(); 
+ 		var f1 = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img2x.jpg');
  		f1.write(blobObj2);
  		
  		$.resImg3.image = $.img3.image;
-		blobObj3 = $.img3.toImage(); 
- 		var f3 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img3.jpg');
+		blobObj3 = $.img3.toBlob(); 
+ 		var f3 = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img3x.jpg');
  		f3.write(blobObj3);
  		
 		$.resImg4.image = $.img4.image;
-		blobObj4 = $.img4.toImage(); 
- 		var f4 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img4.jpg');
+		blobObj4 = $.img4.toBlob(); 
+ 		var f4 = Titanium.Filesystem.getFile(Titanium.Filesystem.getTempDirectory,'img4x.jpg');
  		f4.write(blobObj4);
 		break;
 	}
@@ -1404,22 +1501,22 @@ function generatePdfToShow() {
 		index_2 = 0;
 	}
 	
-	doc.addPage();
+	// doc.addPage();
 	
-	var image=$.img1.toBlob();
+	// var image=$.img1.toBlob();
     // var str = Ti.Utils.base64encode(image);
  
     // var image2=Ti.Utils.base64decode(str);
     // alert(image2.toString());
 	// var imgSample2 = Titanium.Filesystem.getFile(Titanium.Filesystem.resourcesDirectory,'img1x.jpg');
-	var imgSample2 = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, 'destination.jpg');
+	// var imgSample2 = Titanium.Filesystem.getFile(Titanium.Filesystem.applicationDataDirectory, 'destination.jpg');
 	// var imgSample2 = $.resImg1.image;
-	var imgView1 = {
-		width : 'auto',
-		heigth : 'auto',
-		image : imgSample2,
-	};
-	doc.addImage(imgSample2, 'JPEG', 10, 20, 128, 96, 160, 120, 120);	
+	// var imgView1 = {
+		// width : 'auto',
+		// heigth : 'auto',
+		// image : imgSample2,
+	// };
+	// doc.addImage(imgSample2, 'JPEG', 10, 20, 128, 96, 160, 120, 120);	
 	
 	// doc.rect(20, 120, 10, 10);
 	// empty square
@@ -1442,10 +1539,10 @@ function generatePdfToShow() {
 	if (_tempFile != null) {
 		_tempFile.deleteFile();
 	}
-	_tempFile = Ti.Filesystem.getFile(Ti.Filesystem.getTempDirectory(), 'result.pdf');
+	_tempFile = Ti.Filesystem.getFile(Ti.Filesystem.getTempDirectory(), 'sendingPdf1.pdf');
 	doc.save(_tempFile);
 
-	if (_isAndroid) {
+	/*if (_isAndroid) {
 		var intent = Ti.Android.createIntent({
 			action : Ti.Android.ACTION_VIEW,
 			type : "application/pdf",
@@ -1467,7 +1564,7 @@ function generatePdfToShow() {
 			width : Ti.UI.FILL
 		});
 		$.PDF_View_1.add(pdfview);
-	}
+	}*/
 }
 
 
@@ -1544,11 +1641,16 @@ function saveDataToDB() {
 	db.database.addOtherDriver(otherDriverArr,dateSelected);
 	db.database.addWitnesses(witnessArr,dateSelected);
 	
-	alert("all success now fetch");
+	// alert("all success now fetch");
 }
 
 
 function restartProcedure() {
+	
+	if($.restartButton.touchEnabled == false)
+	{
+		return;
+	}
 	
 	$.restartButton.initiated = 1;
 	

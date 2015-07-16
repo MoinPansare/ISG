@@ -4,7 +4,7 @@
 			<Label id="title">Incidents</Label>
 			<ImageView id="backImage" onClick="goPrevious"></ImageView>
 			<Label id="nextButton" onClick="goNext"></Label>
-			<Label id="SendEmail"></Label>
+			<Label id="SendEmail" onClick="saveAndSendEmail"></Label>
 		</View>
 		<ScrollableView id="parentScrollableView1">
 			<View class="scrollableSubChilds" id="incidentsListView">

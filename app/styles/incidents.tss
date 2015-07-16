@@ -28,7 +28,9 @@
 	left : "3%",
 	width : "18%",
 	height : 40,
-	image : "/images/toolbarImages/back.png"
+	image : "/images/toolbarImages/back.png",
+	opacity : 0.0,
+	touchEnabled : false
 }
 
 "#nextButton":{
@@ -39,18 +41,20 @@
 		fontSize : 13
 	},
 	backgroundImage : "/images/toolbarImages/next.png",
+	opacity : 0.0,
+	touchEnabled : false
 }
 
 "#SendEmail":{
-	left : "100%",
-	width : "15%",
-	height : 35,
+	right : "5%",
+	width : "25%",
+	height : 40,
 	font : {
 		fontSize : 13
 	},
-	text : 'Done',
-	text : 'Send Email',
-	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+	opacity : 0.0,
+	touchEnabled : false,
+	backgroundImage : "/images/toolbarImages/send_email.png",
 }
 
 "#parentScrollableView1":{

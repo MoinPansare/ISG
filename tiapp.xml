@@ -54,7 +54,7 @@
             <uses-permission android:name="com.qaagility.isg.permission.MAPS_RECEIVE"/>
             <permission
                 android:name="com.qaagility.isg.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
-            <application android:debuggable="false" android:theme="@style/Theme.Titanium">
+            <application android:debuggable="false" android:theme="@style/Theme.AppCompat.Light.NoActionBar">
                 <meta-data
                     android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDROaArf3NJbYKQZUceN23l56yQujbAF5s"/>
             </application>

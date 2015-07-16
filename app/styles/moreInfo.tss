@@ -75,13 +75,13 @@
 		fontWeight : 'bold'
 	},
 	color : "black",
-	left : "45",
+	left : "60",
 	textAlign : Titanium.UI.TEXT_ALIGNMENT_LEFT,
 	bubbleParent : true
 }
 
 ".rightArrow":{
-	right : "9%",
+	right : "5%",
 	width : 25,
 	height : 25,
 	image : "/images/created/arrow.png",

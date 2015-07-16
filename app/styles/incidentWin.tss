@@ -19,8 +19,10 @@
 	left : "3%",
 	width : "18%",
 	height : 40,
-	image : "/images/toolbarImages/back.png"
-	// backgroundColor : 'red'
+	image : "/images/toolbarImages/back.png",
+	// backgroundColor : 'red',
+	opacity : 0.0,
+	touchEnabled : false
 }
 
 "#restartButton":{
@@ -33,7 +35,9 @@
 	// text : 'Restart',
 	// backgroundColor : 'red',
 	backgroundImage : "/images/toolbarImages/restart.png",
-	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER
+	textAlign : Titanium.UI.TEXT_ALIGNMENT_CENTER,
+	opacity : 0.0,
+	touchEnabled : false
 }
 
 "#editORdone":{
@@ -273,7 +277,8 @@
 	right : 0,
 	height : "100%",
 	backgroundColor : 'black',
-	opacity : 0.55
+	opacity : 0.55,
+	bubbleParent : false
 }
 
 "#overlayView":{
@@ -282,6 +287,7 @@
 	right : 0,
 	height : "100%",
 	backgroundColor : 'transparent',
+	bubbleParent : false
 }
 
 "#horizontalView":{

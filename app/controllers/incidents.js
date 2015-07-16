@@ -11,6 +11,11 @@ Ti.Geolocation.purpose = 'Location based services for the app';
 Ti.Geolocation.accuracy = Ti.Geolocation.ACCURACY_NEAREST_TEN_METERS;
 Ti.Geolocation.preferredProvider = Ti.Geolocation.PROVIDER_GPS;
 
+
+var _jsPDF = require('tiPDF');
+var _isAndroid = Ti.Platform.osname === 'android';
+var _tempFile = null;
+
 //---------------------------------------------------------------------variable declaration
 var incidentsArr = [];
 var witnessArr = [];
@@ -31,28 +36,31 @@ loadList();
 // -------------------------------------------------------------------------function body
 
 function goPrevious() {
+	if ($.backImage.touchEnabled == false) {
+		return;
+	}
+
 	if ($.parentScrollableView1.currentPageIndex == 0) {
 		return;
 	}
-	
-	if(Alloy.Globals.userLocationChanged == 1)
-	{
+
+	if (Alloy.Globals.userLocationChanged == 1) {
 		Alloy.Globals.userLocationChanged = 0;
 		// update location in both pages
-		
+
 		Titanium.Geolocation.reverseGeocoder(userLat, userLong, function(e) {
 			try {
 				$.actualLocation.text = e.places[0].address;
 				var db = require('databaseinteractions');
-				db.database.updateIncident($.actualLocation.text,userLat,userLong,$.actualDate.text);
+				db.database.updateIncident($.actualLocation.text, userLat, userLong, $.actualDate.text);
 				getDetailViewFor($.actualDate.text);
 			} catch(e) {
 				alert("There was a problen in getting your location\nPlease Try Again");
 				var db = require('databaseinteractions');
-				db.database.updateIncident("Location Not Found",userLat,userLong,$.actualDate.text);
+				db.database.updateIncident("Location Not Found", userLat, userLong, $.actualDate.text);
 				getDetailViewFor($.actualDate.text);
 			}
-		}); 
+		});
 	}
 
 	if (mapShown == 1) {
@@ -121,7 +129,12 @@ function goPrevious() {
 }
 
 function goNext() {
+
+	if ($.nextButton.touchEnabled == false) {
+		return;
+	}
 	if ($.parentScrollableView1.currentPageIndex == 1) {
+
 		return;
 	}
 	$.parentScrollableView1.moveNext();
@@ -129,6 +142,17 @@ function goNext() {
 
 $.parentScrollableView1.addEventListener('scrollend', function(e) {
 	$.parentScrollableView1.currentPageIndex = e.currentPage;
+	if (e.currentPage == 0) {
+		$.backImage.opacity = 0.0;
+		$.backImage.touchEnabled = false;
+		$.SendEmail.opacity = 0.0;
+		$.SendEmail.touchEnabled = false;
+	} else {
+		$.backImage.opacity = 1.0;
+		$.backImage.touchEnabled = true;
+		$.SendEmail.opacity = 1.0;
+		$.SendEmail.touchEnabled = true;
+	}
 });
 
 $.driverWitnessScrollableView.addEventListener('scrollend', function(e) {
@@ -136,8 +160,7 @@ $.driverWitnessScrollableView.addEventListener('scrollend', function(e) {
 });
 
 function loadList() {
-	
-	
+
 	if ($.listContainer && $.listContainer.children != undefined) {
 		var removeData = [];
 		for ( i = $.listContainer.children.length; i > 0; i--) {
@@ -148,8 +171,7 @@ function loadList() {
 		}
 		removeData = null;
 	};
-	
-	
+
 	var db = require('databaseinteractions');
 	incidentsArr = db.database.getIncidents();
 	// for(i=0;i<incidentsArr.length;i++)
@@ -249,7 +271,6 @@ function getViewFor(blob, index) {
 		}
 	});
 
-	
 	deleteButton.addEventListener('click', function(e) {
 		// alert(mainView.id);
 		if (deleteButton.touchEnabled == false) {
@@ -272,8 +293,7 @@ function getViewFor(blob, index) {
 		db.database.deleteWitnessForIncident(mainView.id);
 		loadList();
 
-	}); 
-
+	});
 
 	mainView.add(NameHeading);
 	mainView.add(detailView);
@@ -964,3 +984,106 @@ function showMap() {
 
 }
 
+
+
+function saveAndSendEmail() {
+	generatePdfToShow();
+	setTimeout(function(e) {
+		var emailDialog = Ti.UI.createEmailDialog();
+		emailDialog.subject = "Incident Report";
+		emailDialog.toRecipients = ['repairs@incidentsupportgroup.co.uk'];
+		// emailDialog.toRecipients = ['moin.6192@gmail.com'];
+		emailDialog.messageBody = 'Attached is an incident report from ISG helpline App ';
+
+		var file = Ti.Filesystem.getFile(Ti.Filesystem.getTempDirectory(), 'sendingPdf1.pdf');
+		if (file.exists()) {
+			emailDialog.addAttachment(file.read());
+		} else {
+			Ti.API.error('file does not exists');
+		}
+
+		emailDialog.addEventListener('complete', function(e) {
+
+			if (e.result == emailDialog.SENT) {
+				if (Ti.Platform.osname != 'android') {
+					// android doesn't give us useful result codes.
+					// it anyway shows a toast.
+					alert("email sent successfully");
+				}
+			} else {
+				alert("message was not sent. result = " + e.result);
+			}
+		});
+		emailDialog.open();
+	}, 100);
+}
+
+
+
+function generatePdfToShow() {
+	var index = 0;
+	var index_2 = 0;
+	var yposition;
+	var doc = new _jsPDF();
+	doc.setProperties({
+		title : 'Title',
+		subject : 'This is the subject',
+		author : 'Moin',
+		keywords : 'one, two, three',
+		creator : 'Moin'
+	});
+
+	// var imgSample1 = Ti.Filesystem.resourcesDirectory + 'image1.jpg';
+	// doc.addImage(imgSample1, 'JPEG', 10, 20, 128, 96);
+
+	doc.setFont("helvetica");
+	doc.setFontType("bold");
+	doc.setFontSize(15);
+	doc.text(5, 10, 'Date Selected');
+	doc.text(5, 20, $.actualDate.text.toString());
+
+	doc.text(5, 30, 'Location');
+	doc.text(5, 40, $.actualLocation.text.toString());
+
+	yposition = 40;
+
+	for ( i = 0; i < otherDriverArr.length; i++) {
+		if (yposition + 80 < 270) {
+
+		} else {
+			index = 0;
+			doc.addPage();
+		}
+		doc.text(5, (40 + (70 * index) + (10 + 10)), 'Other Driver');
+		doc.text(5, (40 + (70 * index) + (20 + 10)), ('Name : ' + otherDriverArr[i].name.toString()));
+		doc.text(5, (40 + (70 * index) + (30 + 10)), ('Phone : ' + otherDriverArr[i].phone.toString()));
+		doc.text(5, (40 + (70 * index) + (40 + 10)), ('Email : ' + otherDriverArr[i].emailId.toString()));
+		doc.text(5, (40 + (70 * index) + (50 + 10)), ('Car Registration : ' + otherDriverArr[i].carRegistration));
+		doc.text(5, (40 + (70 * index) + (60 + 10)), ('Description : ' + otherDriverArr[i].description));
+		doc.text(5, (40 + (70 * index) + (70 + 10)), ('Injury : ' + otherDriverArr[i].injury));
+		yposition = (40 + (70 * index) + (70 + 10));
+		index++;
+	}
+
+	for ( i = 0; i < witnessArr.length; i++) {
+		if (yposition + 50 < 270) {
+
+		} else {
+			index_2 = 0;
+			doc.addPage();
+		}
+		doc.text(5, (yposition + (40 * index_2) + (10 + 10)), 'Witness');
+		doc.text(5, (yposition + (40 * index_2) + (20 + 10)), ('Name : ' + witnessArr[i].name.toString()));
+		doc.text(5, (yposition + (40 * index_2) + (30 + 10)), ('Phone : ' + witnessArr[i].phone.toString()));
+		doc.text(5, (yposition + (40 * index_2) + (40 + 10)), ('Email : ' + witnessArr[i].emailId.toString()));
+		yposition = (yposition + (40 * index_2) + (40 + 10));
+		index_2 = 0;
+	}
+	
+	if (_tempFile != null) {
+		_tempFile.deleteFile();
+	}
+	_tempFile = Ti.Filesystem.getFile(Ti.Filesystem.getTempDirectory(), 'sendingPdf1.pdf');
+	doc.save(_tempFile);
+
+}
