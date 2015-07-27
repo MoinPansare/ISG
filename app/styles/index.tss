@@ -51,6 +51,6 @@
 	font: {
 		fontSize: 16
 	},
-	textAlign: Titanium.UI.TEXT_ALIGNMENT_LEFT,
+	textAlign: Titanium.UI.TEXT_ALIGNMENT_CENTER,
 	color : 'black',
 }

@@ -141,40 +141,54 @@ function goPrevious() {
 	$.nextButton.left = "80%";
 	$.SendEmail.right = "-50%";
 	$.restartButton.left = "60%";
-	if($.statusPointer.tag == 1)
-	{
-		return;
-	}
-	else
-	{
-		$.statusPointer.tag--;
-		switch($.statusPointer.tag){
-			case 1 : $.statusPointer.backgroundImage = "/images/headers/top1.png";break;
-			case 2 : $.statusPointer.backgroundImage = "/images/headers/top2.png";break;
-			case 3 : $.statusPointer.backgroundImage = "/images/headers/top3.png";break;
-			case 4 : $.statusPointer.backgroundImage = "/images/headers/top4.png";break;
-			case 5 : $.statusPointer.backgroundImage = "/images/headers/top5.png";break;
-			case 6 : $.statusPointer.backgroundImage = "/images/headers/top6.png";break;
-			case 7 : $.statusPointer.backgroundImage = "/images/headers/top7.png";break;
-		}
-		if($.statusPointer.tag < 6 && $.statusPointer.animateRight != 0){
-			var anim = Ti.UI.createAnimation();
-			anim.duration = 400;
-			anim.left = -4;
-			$.statusPointer.animate(anim);
-			anim = null;
-			$.statusPointer.animateRight = 0;
-		}
-		
-	}
 	
+	if ($.witnessViewReal.addingViewDisplayed == 0 && $.witnessView.addingViewDisplayed == 0) {
+		if ($.statusPointer.tag == 1) {
+			return;
+		} else {
+			$.statusPointer.tag--;
+			switch($.statusPointer.tag) {
+			case 1 :
+				$.statusPointer.backgroundImage = "/images/headers/top1.png";
+				break;
+			case 2 :
+				$.statusPointer.backgroundImage = "/images/headers/top2.png";
+				break;
+			case 3 :
+				$.statusPointer.backgroundImage = "/images/headers/top3.png";
+				break;
+			case 4 :
+				$.statusPointer.backgroundImage = "/images/headers/top4.png";
+				break;
+			case 5 :
+				$.statusPointer.backgroundImage = "/images/headers/top5.png";
+				break;
+			case 6 :
+				$.statusPointer.backgroundImage = "/images/headers/top6.png";
+				break;
+			case 7 :
+				$.statusPointer.backgroundImage = "/images/headers/top7.png";
+				break;
+			}
+			if ($.statusPointer.tag < 6 && $.statusPointer.animateRight != 0) {
+				var anim = Ti.UI.createAnimation();
+				anim.duration = 400;
+				anim.left = -4;
+				$.statusPointer.animate(anim);
+				anim = null;
+				$.statusPointer.animateRight = 0;
+			}
+
+		}
+	}
+
+
 	
 	if ($.witnessView.addingViewDisplayed == 1) {
 		$.witnessView.addingViewDisplayed = 0;
 		blurInput();
 		hideWitnessAddingScreen();
 		resetOtherDriver();
-		
 		return;
 	}
 	if ($.witnessViewReal.addingViewDisplayed == 1) {
@@ -199,6 +213,11 @@ function goPrevious() {
 
 
 function goNext() {
+	
+	if($.nextButton.touchEnabled == false)
+	{
+		return;
+	}
 	
 	$.backImage.opacity = 1.0;
 	$.backImage.touchEnabled = true;
@@ -304,14 +323,14 @@ $.parentScrollableView.addEventListener('scrollend', function(e) {
 					mainMapView.setLocation(region);
 				} catch(e) {
 					var region = {
-						latitude : 18.97,
-						longitude : 72.82,
+						latitude : 51.50,
+						longitude : 0.12,
 						animate : true,
 						latitudeDelta : 0.01,
 						longitudeDelta : 0.01
 					};
-					userLat = 18.97;
-					UserLong = 72.82;
+					userLat = 51.50;
+					UserLong = 0.12;
 					mainMapView.setLocation(region);
 					alert("User Location Not Found");
 				}
@@ -580,6 +599,10 @@ function closeOverlay() {
 }
 
 function hideWitnessAddingScreen() {
+	
+	$.nextButton.opacity = 1.0;
+	$.nextButton.touchEnabled = true;
+	
 	var anim = Ti.UI.createAnimation();
 	anim.duration = 400;
 	anim.left = "100%";
@@ -590,6 +613,8 @@ function hideWitnessAddingScreen() {
 
 
 function animateToShowAddingScreen() {
+	$.nextButton.opacity = 0.0;
+	$.nextButton.touchEnabled = false;
 	$.witnessNameTextField.id = "";
 	$.witnessView.toEdit = 0;
 	var anim = Ti.UI.createAnimation();
@@ -623,14 +648,23 @@ function validateAndSave () {
 		alert("Please enter a Name");
 		return;
 	}
-	if (parseFloat($.witnessPhoneTextField.value) == 'NaN' || $.witnessPhoneTextField.value.length != 10) {
-		alert("Phone Number is Invalid");
-		return;
+	
+	if ($.witnessPhoneTextField.value.length != 0) {
+		if (parseFloat($.witnessPhoneTextField.value) == 'NaN' || $.witnessPhoneTextField.value.length != 10) {
+			alert("Phone Number is Invalid");
+			return;
+		}
 	}
-	if (!$.witnessEmailTextField.value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
-		alert("Email Id is Invalid");
-		return;
-	} 
+	
+	
+	if ($.witnessEmailTextField.value.length != 0) {
+		if (!$.witnessEmailTextField.value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
+			alert("Email Id is Invalid");
+			return;
+		}
+	}
+
+	
 	if($.witnessLastNameTextField.value.length == 0)
 	{
 		alert("Please Enter Car Registration");
@@ -795,6 +829,10 @@ function createCustomView(blob, index) {
 		$.witnessLastNameTextField.value = blob.carRegistration;
 		$.witnessDescriptionTextArea.value = blob.description;
 		$.injuriesTextArea.value = blob.injury;
+		
+		$.nextButton.opacity = 0.0;
+		$.nextButton.touchEnabled = false;
+		
 		var anim = Ti.UI.createAnimation();
 		anim.left = "0%";
 		anim.duration = 300;
@@ -906,6 +944,10 @@ function blurInputReal() {
 	}
 }
 function animateToShowAddingScreenWitnessReal () {
+	
+	$.nextButton.opacity = 0.0;
+	$.nextButton.touchEnabled = false;
+	
   	$.witnessNameTextFieldReal.id = "";
 	$.witnessViewReal.toEdit = 0;
 	var anim = Ti.UI.createAnimation();
@@ -919,6 +961,10 @@ function animateToShowAddingScreenWitnessReal () {
 	$.witnessEmailTextFieldReal.value = "";
 }
 function hideWitnessAddingScreenReal() {
+	
+	$.nextButton.opacity = 1.0;
+	$.nextButton.touchEnabled = true;
+	
 	var anim = Ti.UI.createAnimation();
 	anim.duration = 400;
 	anim.left = "100%";
@@ -934,14 +980,22 @@ function validateAndSaveWitnessReal () {
 		alert("Please enter a Name");
 		return;
 	}
-	if ((parseFloat($.witnessPhoneReal.value) == 'NaN') || $.witnessPhoneReal.value.length != 10) {
-		alert("Phone Number is Invalid");
-		return;
+	
+	if ($.witnessPhoneReal.value.length != 0) {
+		if ((parseFloat($.witnessPhoneReal.value) == 'NaN') || $.witnessPhoneReal.value.length != 10) {
+			alert("Phone Number is Invalid");
+			return;
+		}
 	}
-	if (!$.witnessEmailTextFieldReal.value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
-		alert("Email Id is Invalid");
-		return;
-	} 
+
+	
+	if ($.witnessEmailTextFieldReal.value.length != 0) {
+		if (!$.witnessEmailTextFieldReal.value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
+			alert("Email Id is Invalid");
+			return;
+		}
+	}
+	
 	var blob = {
 		id : $.witnessNameTextFieldReal.value+$.witnessPhoneReal.value+$.witnessEmailTextFieldReal.value,
 		name : $.witnessNameTextFieldReal.value,
@@ -1069,6 +1123,9 @@ function createCustomViewReal(blob, index) {
 		$.witnessNameTextFieldReal.value = blob.name;
 		$.witnessPhoneReal.value = blob.phone;
 		$.witnessEmailTextFieldReal.value = blob.emailId;
+		
+		$.nextButton.opacity = 0.0;
+		$.nextButton.touchEnabled = false;
 		
 		var anim = Ti.UI.createAnimation();
 		anim.left = "0%";

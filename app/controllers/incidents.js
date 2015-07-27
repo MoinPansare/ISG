@@ -82,6 +82,11 @@ function goPrevious() {
 		return;
 	}
 	if ($.witnessViewReal.addingViewDisplayed12 == 1) {
+		
+		$.SendEmail.opacity = 1.0;
+		$.SendEmail.touchEnabled = true;
+	
+		
 		blurInputReal();
 		resetWitness();
 		$.witnessViewReal.addingViewDisplayed12 = 0;
@@ -100,6 +105,10 @@ function goPrevious() {
 		blurInput();
 		resetOtherDriver();
 		$.driverView.addingViewDisplayed = 0;
+		
+		$.SendEmail.opacity = 1.0;
+		$.SendEmail.touchEnabled = true;
+		
 		var anim = Ti.UI.createAnimation();
 		anim.left = "100%";
 		anim.duration = 300;
@@ -366,6 +375,10 @@ function showWitnessScreen() {
 }
 
 function animateToShowAddingScreen() {
+	
+	$.SendEmail.opacity = 0.0;
+	$.SendEmail.touchEnabled = false;
+	
 	$.driverView.addingViewDisplayed = 1;
 	var anim = Ti.UI.createAnimation();
 	anim.left = "0%";
@@ -505,6 +518,10 @@ function createCustomView(blob, index) {
 		$.witnessLastNameTextField.value = blob.carRegistration;
 		$.witnessDescriptionTextArea.value = blob.description;
 		$.injuriesTextArea.value = blob.injury;
+		
+		$.SendEmail.opacity = 0.0;
+		$.SendEmail.touchEnabled = false;
+		
 		var anim = Ti.UI.createAnimation();
 		anim.left = "0%";
 		anim.duration = 300;
@@ -590,14 +607,23 @@ function validateAndSave() {
 		alert("Please enter a Name");
 		return;
 	}
-	if (parseFloat($.witnessPhoneTextField.value) == 'NaN' || $.witnessPhoneTextField.value.length != 10) {
-		alert("Phone Number is Invalid");
-		return;
+	
+	if ($.witnessPhoneTextField.value.length != 0) {
+		if (parseFloat($.witnessPhoneTextField.value) == 'NaN' || $.witnessPhoneTextField.value.length != 10) {
+			alert("Phone Number is Invalid");
+			return;
+		}
 	}
-	if (!$.witnessEmailTextField.value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
-		alert("Email Id is Invalid");
-		return;
+	
+	
+	if ($.witnessEmailTextField.value.length != 0) {
+		if (!$.witnessEmailTextField.value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
+			alert("Email Id is Invalid");
+			return;
+		}
 	}
+
+	
 	if ($.witnessLastNameTextField.value.length == 0) {
 		alert("Please Enter Car Registration");
 		return;
@@ -643,6 +669,10 @@ function validateAndSave() {
 }
 
 function hideWitnessAddingScreen() {
+	
+	$.SendEmail.opacity = 1.0;
+	$.SendEmail.touchEnabled = true;
+	
 	var anim = Ti.UI.createAnimation();
 	anim.duration = 400;
 	anim.left = "100%";
@@ -654,6 +684,9 @@ function hideWitnessAddingScreen() {
 //-----------------------------------------------------------------Witness View Real
 
 function animateToShowAddingScreenWitnessReal() {
+	
+	$.SendEmail.opacity = 0.0;
+	$.SendEmail.touchEnabled = false;
 
 	setTimeout(function(e) {
 		$.witnessViewReal.addingViewDisplayed12 = 1;
@@ -675,6 +708,11 @@ function animateToShowAddingScreenWitnessReal() {
 }
 
 function hideWitnessAddingScreenReal() {
+	
+	$.SendEmail.opacity = 1.0;
+	$.SendEmail.touchEnabled = true;
+
+	
 	var anim = Ti.UI.createAnimation();
 	anim.duration = 400;
 	anim.left = "100%";
@@ -691,14 +729,21 @@ function validateAndSaveWitnessReal() {
 		alert("Please enter a Name");
 		return;
 	}
-	if ((parseFloat($.witnessPhoneReal.value) == 'NaN') || $.witnessPhoneReal.value.length != 10) {
-		alert("Phone Number is Invalid");
-		return;
+	
+	if ($.witnessPhoneReal.value.length != 0) {
+		if ((parseFloat($.witnessPhoneReal.value) == 'NaN') || $.witnessPhoneReal.value.length != 10) {
+			alert("Phone Number is Invalid");
+			return;
+		}
 	}
-	if (!$.witnessEmailTextFieldReal.value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
-		alert("Email Id is Invalid");
-		return;
+
+	if ($.witnessEmailTextFieldReal.value.length != 0) {
+		if (!$.witnessEmailTextFieldReal.value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
+			alert("Email Id is Invalid");
+			return;
+		}
 	}
+	
 	var blob = {
 		id : $.witnessNameTextFieldReal.id,
 		name : $.witnessNameTextFieldReal.value,
@@ -817,6 +862,10 @@ function createCustomViewReal(blob, index) {
 		$.witnessPhoneReal.value = blob.phone;
 		$.witnessEmailTextFieldReal.value = blob.emailId;
 
+		$.SendEmail.opacity = 0.0;
+		$.SendEmail.touchEnabled = false;
+
+		
 		var anim = Ti.UI.createAnimation();
 		anim.left = "0%";
 		anim.duration = 300;
@@ -987,6 +1036,12 @@ function showMap() {
 
 
 function saveAndSendEmail() {
+	
+	if($.SendEmail.touchEnabled == false)
+	{
+		return;
+	}
+	
 	generatePdfToShow();
 	setTimeout(function(e) {
 		var emailDialog = Ti.UI.createEmailDialog();

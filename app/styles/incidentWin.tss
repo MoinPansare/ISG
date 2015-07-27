@@ -137,7 +137,7 @@
 	},
 	color : 'black',
 	height : 'auto',
-	text : "Press 'Next' on top right-hand column to procede onto various senctions \n\n Press 'Next' on top right-hand column to procede onto various senctions \n\n Press 'Next' on top right-hand column to procede onto various senctions \n\n Press 'Next' on top right-hand column to procede onto various senctions" 
+	text : "Press 'Next' on top right-hand column to proceed onto various sections \n\n You will be able to record you location, take photos and add parties and witnesses \n\n Once the report is sent to ISG you can view and alter the report in 'Incidents' tab" 
 }
 
 "#dateSelection":{
